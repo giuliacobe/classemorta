@@ -4,14 +4,11 @@
  */
 package it.edu.marconiverona.classemorta;
 
+import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 
 /**
  *
@@ -23,8 +20,11 @@ public class Main {
         String url = "jdbc:h2:~/testdb";
         String user = "sa";
         String password = "";
-
-        try (Connection conn = DriverManager.getConnection(url, user, password); Statement stmt = conn.createStatement(); BufferedReader br = new BufferedReader(new FileReader("path/to/your/schema.sql"))) {
+        Class.forName("org.h2.Driver");
+        try (Connection conn = DriverManager.getConnection(url, user, password);
+                  Statement stmt = conn.createStatement();
+                  InputStream is = Main.class.getClassLoader().getResourceAsStream("DB.sql");
+                  BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
 
             StringBuilder sql = new StringBuilder();
             String line;
