@@ -45,7 +45,7 @@ public class SignUp extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(204, 4, 4));
 
-        jLabel1.setIcon(new javax.swing.ImageIcon("src\\icon\\logo2.png"));
+        jLabel1.setIcon(new javax.swing.ImageIcon(Main.class.getClassLoader().getResource("logo2.png")));
 
         jLabel2.setFont(new java.awt.Font("Showcard Gothic", 0, 24));
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
