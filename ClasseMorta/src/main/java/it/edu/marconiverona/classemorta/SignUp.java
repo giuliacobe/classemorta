@@ -11,7 +11,7 @@ import javax.swing.JLabel;
  * @author ferna
  */
 public class SignUp extends javax.swing.JFrame {
-        
+
     public SignUp() {
         initComponents();
     }
@@ -45,7 +45,7 @@ public class SignUp extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(204, 4, 4));
 
-        jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\ferna\\Documents\\NetBeansProjects\\ClasseMorta\\src\\icon\\logo2.png"));
+        jLabel1.setIcon(new javax.swing.ImageIcon("src\\icon\\logo2.png"));
 
         jLabel2.setFont(new java.awt.Font("Showcard Gothic", 0, 24));
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
@@ -215,6 +215,7 @@ public class SignUp extends javax.swing.JFrame {
     }
 
     private void registrazione(java.awt.event.ActionEvent evt) {
+
         String username = jLabel6.getText();
         String password = jLabel7.getText();
     }
@@ -226,8 +227,6 @@ public class SignUp extends javax.swing.JFrame {
     public JLabel getjLabel7() {
         return jLabel7;
     }
-    
-    
 
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

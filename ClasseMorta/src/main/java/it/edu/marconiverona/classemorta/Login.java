@@ -45,7 +45,7 @@ public class Login extends javax.swing.JFrame {
         Right.setBackground(new java.awt.Color(204, 4, 4));
         Right.setPreferredSize(new java.awt.Dimension(400, 500));
 
-        jLabel5.setIcon(new javax.swing.ImageIcon("C:\\Users\\ferna\\Documents\\NetBeansProjects\\ClasseMorta\\src\\icon\\logo2.png"));
+        jLabel5.setIcon(new javax.swing.ImageIcon("src\\icon\\logo2.png"));
 
         jLabel6.setFont(new java.awt.Font("Showcard Gothic", 1, 24));
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
@@ -205,7 +205,7 @@ public class Login extends javax.swing.JFrame {
     }
 
     public void afterLogin() {
-        
+
     }
 
     private javax.swing.JPanel Left;
