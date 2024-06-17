@@ -5,12 +5,16 @@
 package it.edu.marconiverona.classemorta;
 
 import javax.swing.JLabel;
+import java.sql.SQLException;
+import java.util.Arrays;
 
 /**
- *
  * @author ferna
  */
 public class SignUp extends javax.swing.JFrame {
+
+    static javax.swing.JTextField jtext2 = new javax.swing.JTextField();
+    static javax.swing.JPasswordField jpass1 = new javax.swing.JPasswordField();
 
     public SignUp() {
         initComponents();
@@ -28,9 +32,7 @@ public class SignUp extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        jPasswordField1 = new javax.swing.JPasswordField();
         jLabel8 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
@@ -103,15 +105,15 @@ public class SignUp extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 14));
         jLabel6.setText("Email");
 
-        jTextField2.setFont(new java.awt.Font("Segoe UI", 0, 14));
-        jTextField2.setForeground(new java.awt.Color(102, 102, 102));
+        jtext2.setFont(new java.awt.Font("Segoe UI", 0, 14));
+        jtext2.setForeground(new java.awt.Color(102, 102, 102));
 
         jLabel7.setBackground(new java.awt.Color(102, 102, 102));
         jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 14));
         jLabel7.setText("Password");
 
-        jPasswordField1.setFont(new java.awt.Font("Segoe UI", 0, 14));
-        jPasswordField1.setForeground(new java.awt.Color(102, 102, 102));
+        jpass1.setFont(new java.awt.Font("Segoe UI", 0, 14));
+        jpass1.setForeground(new java.awt.Color(102, 102, 102));
 
         jLabel8.setText("I've an account");
 
@@ -121,7 +123,14 @@ public class SignUp extends javax.swing.JFrame {
 
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                registrazione(evt);
+                try {
+                    registrati(evt);
+                    jButton2ActionPerformed(evt);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+
+
             }
         });
 
@@ -149,9 +158,9 @@ public class SignUp extends javax.swing.JFrame {
                                                                 .addComponent(jLabel5)
                                                                 .addComponent(jTextField1)
                                                                 .addComponent(jLabel6)
-                                                                .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
+                                                                .addComponent(jtext2, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
                                                                 .addComponent(jLabel7)
-                                                                .addComponent(jPasswordField1))
+                                                                .addComponent(jpass1))
                                                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                         .addGroup(jPanel3Layout.createSequentialGroup()
                                                                 .addComponent(jLabel8)
@@ -171,11 +180,11 @@ public class SignUp extends javax.swing.JFrame {
                                 .addGap(29, 29, 29)
                                 .addComponent(jLabel6)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jtext2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(29, 29, 29)
                                 .addComponent(jLabel7)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jpass1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(24, 24, 24)
@@ -214,20 +223,17 @@ public class SignUp extends javax.swing.JFrame {
         this.dispose();
     }
 
-    private void registrazione(java.awt.event.ActionEvent evt) {
-
-        String username = jLabel6.getText();
-        String password = jLabel7.getText();
-
-
+    public static String getUsername() {
+        return jtext2.getText();
     }
 
-    public JLabel getjLabel6() {
-        return jLabel6;
+    public static String getPassword() {
+        return new String(jpass1.getPassword());
     }
 
-    public JLabel getjLabel7() {
-        return jLabel7;
+    public static void registrati(java.awt.event.ActionEvent evt) throws SQLException {
+        String datiLogin = "INSERT INTO DatiLogin(email, password) VALUES('" + SignUp.getUsername() + "', '" + SignUp.getPassword() + "')";
+        Main.stmt.executeUpdate(datiLogin);
     }
 
     private javax.swing.JButton jButton1;
@@ -243,7 +249,5 @@ public class SignUp extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
 }

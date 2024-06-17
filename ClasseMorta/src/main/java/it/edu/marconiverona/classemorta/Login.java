@@ -5,9 +5,11 @@
 package it.edu.marconiverona.classemorta;
 
 import javax.swing.SwingUtilities;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- *
  * @author ferna
  */
 public class Login extends javax.swing.JFrame {
@@ -111,7 +113,29 @@ public class Login extends javax.swing.JFrame {
         jButton1.setText("Login");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                afterLogin();
+                String query = "SELECT email FROM DatiLogin WHERE email = ? ";
+                String query2 = "SELECT password FROM DatiLogin WHERE password = ? ";
+                try (PreparedStatement stmt = Main.conn.prepareStatement(query)) {
+                    stmt.setString(1, jTextField1.getText());
+                    try (ResultSet rs = stmt.executeQuery()) {
+                        if (rs.next()) {
+                            String emailFromDB = rs.getString("email");
+                            try (PreparedStatement stmt2 = Main.conn.prepareStatement(query2)) {
+                                stmt2.setString(1, getPassword());
+                                try (ResultSet rs2 = stmt2.executeQuery()) {
+                                    if (rs2.next()) {
+                                        String passFromDB = rs2.getString("password");
+                                        if (passFromDB.equals(getPassword()) && emailFromDB.equals(jTextField1.getText())) {
+                                            afterLogin();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -205,7 +229,15 @@ public class Login extends javax.swing.JFrame {
     }
 
     public void afterLogin() {
+        Registro RegistroFrame = new Registro();
+        RegistroFrame.setVisible(true);
+        RegistroFrame.pack();
+        RegistroFrame.setLocationRelativeTo(null);
+        this.dispose();
+    }
 
+    public String getPassword() {
+        return new String(jPasswordField1.getPassword());
     }
 
     private javax.swing.JPanel Left;
