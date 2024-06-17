@@ -218,6 +218,8 @@ public class SignUp extends javax.swing.JFrame {
 
         String username = jLabel6.getText();
         String password = jLabel7.getText();
+
+
     }
 
     public JLabel getjLabel6() {
