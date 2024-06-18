@@ -1,4 +1,5 @@
 CREATE TABLE IF NOT EXISTS DatiLogin(
-    email VARCHAR(100) NOT NULL,
-    password VARCHAR(100) NOT NULL
+    id int PRIMARY KEY AUTO_INCREMENT,
+    email varchar(100),
+    password varchar(100)
 );
