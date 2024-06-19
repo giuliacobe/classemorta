@@ -233,7 +233,7 @@ public class Login extends javax.swing.JFrame {
             }
         });
         jButton3.setBackground(new java.awt.Color(0, 102, 102));
-        jButton1.setFont(new java.awt.Font("Segoe UI", 0, 14));
+        jButton3.setFont(new java.awt.Font("Segoe UI", 0, 14));
         jButton3.setForeground(new java.awt.Color(255, 255, 255));
         jButton3.setBounds(250, 327, 93, 36);
         Left.add(jButton3);
@@ -263,6 +263,35 @@ public class Login extends javax.swing.JFrame {
         getAccessibleContext().
                 setAccessibleName("LOGIN");
         pack();
+
+        jButton4 = new javax.swing.JButton();
+        jButton4.setFont(new java.awt.Font("Segoe UI", 0, 14));
+        jButton4.setText("Home");
+        jButton4.setForeground(new java.awt.Color(0, 0, 0));
+        jButton4.setOpaque(false);
+        jButton4.setContentAreaFilled(false);
+        jButton4.setBorderPainted(false);
+        jButton4.setDefaultCapable(false);
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tornaIndietro();
+            }
+        });
+        jButton4.setBackground(null);
+        jButton4.setFont(new java.awt.Font("Segoe UI", 0, 14));
+        jButton4.setBounds(-20, -5, 93, 36);
+        Left.add(jButton4);
+        jButton4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jButton4.setForeground(new java.awt.Color(255, 0, 0));
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jButton4.setForeground(new java.awt.Color(0, 0, 0));
+            }
+        });
+
+
     }
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
@@ -285,8 +314,9 @@ public class Login extends javax.swing.JFrame {
         return new String(jPasswordField1.getPassword());
     }
 
-    public static void avviaImmagine() {
+    public void avviaImmagine() {
         EventQueue.invokeLater(new Menu());
+        this.dispose();
     }
 
     public void enableDefaultValue(final JTextField tf, final String defaultValue) {
@@ -313,7 +343,7 @@ public class Login extends javax.swing.JFrame {
         });
     }
 
-    public static String getFullName(){
+    public static String getFullName() {
         String fullName = null;
         String query = "SELECT fullName FROM DatiLogin WHERE email = ?;";
         try (PreparedStatement stmt = Main.conn.prepareStatement(query)) {
@@ -327,6 +357,11 @@ public class Login extends javax.swing.JFrame {
             e.printStackTrace();
         }
         return fullName;
+    }
+
+    public void tornaIndietro(){
+        InterfacciaPrima.creazione();
+        this.dispose();
     }
 
     private javax.swing.JPanel Left;
@@ -343,4 +378,5 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
 }

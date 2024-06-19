@@ -216,6 +216,33 @@ public class SignUp extends javax.swing.JFrame {
         );
 
         pack();
+
+        jButton4 = new javax.swing.JButton();
+        jButton4.setFont(new java.awt.Font("Segoe UI", 0, 14));
+        jButton4.setText("Home");
+        jButton4.setForeground(new java.awt.Color(0, 0, 0));
+        jButton4.setOpaque(false);
+        jButton4.setContentAreaFilled(false);
+        jButton4.setBorderPainted(false);
+        jButton4.setDefaultCapable(false);
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tornaIndietro();
+            }
+        });
+        jButton4.setBackground(null);
+        jButton4.setFont(new java.awt.Font("Segoe UI", 0, 14));
+        jButton4.setBounds(-20, -5, 93, 36);
+        jPanel3.add(jButton4);
+        jButton4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jButton4.setForeground(new java.awt.Color(255, 0, 0));
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jButton4.setForeground(new java.awt.Color(0, 0, 0));
+            }
+        });
     }
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
@@ -271,6 +298,11 @@ public class SignUp extends javax.swing.JFrame {
         });
     }
 
+    public void tornaIndietro() {
+        InterfacciaPrima.creazione();
+        this.dispose();
+    }
+
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
@@ -284,4 +316,5 @@ public class SignUp extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JButton jButton4;
 }

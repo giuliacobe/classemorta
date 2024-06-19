@@ -36,9 +36,6 @@ public class Main {
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException, FileNotFoundException, IOException {
         Class.forName("com.mysql.cj.jdbc.Driver");
-        Login LoginFrame = new Login();
-        LoginFrame.setVisible(true);
-        LoginFrame.pack();
-        LoginFrame.setLocationRelativeTo(null);
+        InterfacciaPrima.creazione();
     }
 }
