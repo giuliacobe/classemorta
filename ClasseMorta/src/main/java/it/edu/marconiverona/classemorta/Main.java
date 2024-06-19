@@ -11,8 +11,8 @@ import java.sql.*;
  * @author 19929
  */
 public class Main {
-    public static String url = "jdbc:h2:~/testdb";
-    public static String user = "sa";
+    public static String url = "jdbc:mysql://localhost:3306/classemortadb?useSSL=false";
+    public static String user = "root";
     public static String password = "";
     public static Connection conn;
 
@@ -35,14 +35,10 @@ public class Main {
     }
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException, FileNotFoundException, IOException {
-        Class.forName("org.h2.Driver");
-        InputStream is = Main.class.getClassLoader().getResourceAsStream("DB.sql");
-        BufferedReader br = new BufferedReader(new InputStreamReader(is));
-
+        Class.forName("com.mysql.cj.jdbc.Driver");
         Login LoginFrame = new Login();
         LoginFrame.setVisible(true);
         LoginFrame.pack();
         LoginFrame.setLocationRelativeTo(null);
     }
-
 }

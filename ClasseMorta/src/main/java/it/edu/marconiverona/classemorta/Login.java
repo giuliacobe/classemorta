@@ -5,7 +5,10 @@
 package it.edu.marconiverona.classemorta;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.io.File;
 import java.io.IOException;
 import java.sql.PreparedStatement;
@@ -16,6 +19,9 @@ import java.sql.SQLException;
  * @author ferna
  */
 public class Login extends javax.swing.JFrame {
+
+    public static javax.swing.JTextField jTextField1 = new javax.swing.JTextField();
+
 
     public Login() {
         initComponents();
@@ -32,7 +38,6 @@ public class Login extends javax.swing.JFrame {
         Left = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jPasswordField1 = new javax.swing.JPasswordField();
         jButton1 = new javax.swing.JButton();
@@ -135,6 +140,9 @@ public class Login extends javax.swing.JFrame {
         });
 
         jLabel4.setText("I don't have an account");
+
+        this.enableDefaultValue(jTextField1, "example@example.com");
+        this.enableDefaultValue(jPasswordField1, "********");
 
         jButton2.setFont(new java.awt.Font("Segoe UI", 0, 14));
         jButton2.setForeground(new java.awt.Color(255, 51, 51));
@@ -267,10 +275,9 @@ public class Login extends javax.swing.JFrame {
     }
 
     public void afterLogin() {
-        Registro RegistroFrame = new Registro();
-        RegistroFrame.setVisible(true);
-        RegistroFrame.pack();
-        RegistroFrame.setLocationRelativeTo(null);
+        RegistroElettronicoApp app = new RegistroElettronicoApp();
+        app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        app.setVisible(true);
         this.dispose();
     }
 
@@ -280,6 +287,46 @@ public class Login extends javax.swing.JFrame {
 
     public static void avviaImmagine() {
         EventQueue.invokeLater(new Menu());
+    }
+
+    public void enableDefaultValue(final JTextField tf, final String defaultValue) {
+        tf.setText(defaultValue);
+        tf.setForeground(Color.gray);
+        tf.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (tf.getText().equals(defaultValue)) {
+                    tf.setForeground(Color.black);
+                    tf.setText("");
+                }
+                super.focusGained(e);
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (tf.getText().isEmpty()) {
+                    tf.setForeground(Color.gray);
+                    tf.setText(defaultValue);
+                }
+                super.focusLost(e);
+            }
+        });
+    }
+
+    public static String getFullName(){
+        String fullName = null;
+        String query = "SELECT fullName FROM DatiLogin WHERE email = ?;";
+        try (PreparedStatement stmt = Main.conn.prepareStatement(query)) {
+            stmt.setString(1, jTextField1.getText());
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    fullName = rs.getString("fullName");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return fullName;
     }
 
     private javax.swing.JPanel Left;
@@ -295,6 +342,5 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JButton jButton3;
 }

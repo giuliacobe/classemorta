@@ -1,12 +1,12 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package it.edu.marconiverona.classemorta;
 
-import javax.swing.JLabel;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Arrays;
 
 /**
  * @author ferna
@@ -15,6 +15,7 @@ public class SignUp extends javax.swing.JFrame {
 
     static javax.swing.JTextField jtext2 = new javax.swing.JTextField();
     static javax.swing.JPasswordField jpass1 = new javax.swing.JPasswordField();
+    static javax.swing.JTextField jTextField1 = new javax.swing.JTextField();
 
     public SignUp() {
         initComponents();
@@ -30,7 +31,6 @@ public class SignUp extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
@@ -98,6 +98,9 @@ public class SignUp extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14));
         jLabel5.setText("Full name");
 
+        this.enableDefaultValue(jTextField1, "Cognome Nome");
+        this.enableDefaultValue(jtext2, "example@example.com");
+        this.enableDefaultValue(jpass1, "********");
         jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 14));
         jTextField1.setForeground(new java.awt.Color(102, 102, 102));
 
@@ -231,9 +234,41 @@ public class SignUp extends javax.swing.JFrame {
         return new String(jpass1.getPassword());
     }
 
+    public static String getFullName() {
+        return jTextField1.getText();
+    }
+
     public static void registrati(java.awt.event.ActionEvent evt) throws SQLException {
-        String datiLogin = "INSERT INTO DatiLogin(email, password) VALUES('" + SignUp.getUsername() + "', '" + SignUp.getPassword() + "')";
-        Main.stmt.executeUpdate(datiLogin);
+        String insertQuery = "INSERT INTO DatiLogin(fullName, email, password) VALUES(?, ?, ?)";
+        PreparedStatement pstmt = Main.conn.prepareStatement(insertQuery);
+        pstmt.setString(1, getFullName());
+        pstmt.setString(2, getUsername());
+        pstmt.setString(3, getPassword());
+        pstmt.executeUpdate();
+    }
+
+    public void enableDefaultValue(final JTextField tf, final String defaultValue) {
+        tf.setText(defaultValue);
+        tf.setForeground(Color.gray);
+        tf.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (tf.getText().equals(defaultValue)) {
+                    tf.setForeground(Color.black);
+                    tf.setText("");
+                }
+                super.focusGained(e);
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (tf.getText().isEmpty()) {
+                    tf.setForeground(Color.gray);
+                    tf.setText(defaultValue);
+                }
+                super.focusLost(e);
+            }
+        });
     }
 
     private javax.swing.JButton jButton1;
@@ -249,5 +284,4 @@ public class SignUp extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JTextField jTextField1;
 }
