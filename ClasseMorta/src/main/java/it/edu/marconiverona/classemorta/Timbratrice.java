@@ -4,10 +4,17 @@
  */
 package it.edu.marconiverona.classemorta;
 
-
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Scanner;
-
+import javax.swing.JFileChooser;
+import javax.swing.JPanel;
 
 /**
  * @author 19859
@@ -22,22 +29,7 @@ public class Timbratrice {
     }
 
     public void timbra(String matr, String verso) {
-        if (verso.equals("Entrata") && hasAlreadyEntered(matr)) {
-            System.out.println("Errore: lo studente ha già registrato un'entrata senza uscita.");
-            return;
-        }
         timbrature.add(new Timbratura(matr, verso));
-    }
-
-    // Metodo per verificare se l'utente ha già effettuato un'entrata senza uscita
-    private boolean hasAlreadyEntered(String matr) {
-        for (int i = timbrature.size() - 1; i >= 0; i--) {
-            Timbratura timbratura = timbrature.get(i);
-            if (timbratura.getUtente().equals(matr)) {
-                return timbratura.getVerso().equals("Entrata");
-            }
-        }
-        return false;
     }
 
     //Cerca l'ultima entrata di una matricola

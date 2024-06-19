@@ -8,7 +8,8 @@ package it.edu.marconiverona.classemorta;
 
 /**
  *Iemmolo Gioele
- *
+ * 
+ * Classe: 4DI - 21/12/2023
  *  
  */
 public class Timbratura extends DataOra implements java.io.Serializable{
