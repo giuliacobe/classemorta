@@ -6,16 +6,21 @@ package it.edu.marconiverona.classemorta;
 
 import javax.swing.*;
 import java.awt.*;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.border.EmptyBorder;
 
 public class RegistroElettronicoApp extends JFrame {
+    private JLabel assenze;
+    private JLabel numeroAssenze;
+    private JLabel ritardi;
+    private JLabel numeroRitardi;
+    private JLabel presenze;
+    private JLabel numeroPresenze;
+    private JLabel uscite;
+    private JLabel numeroUscite;
     private JLabel studentNameLabel;
-    private JList<String> centralList;
+    private JList<String> centralList1, centralList2, centralList3, centralList4;
     private JComboBox<String> studentComboBox;
     private JButton markPresenceButton;
     private List<Student> students;
@@ -38,13 +43,81 @@ public class RegistroElettronicoApp extends JFrame {
         add(nameLabel);
         add(studentNameLabel);
 
-        centralList = new JList<>(new DefaultListModel<>());
-        centralList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Selezione singola nella lista
-        centralList.setBackground(Color.decode("#d15c5c")); // Imposta il colore di sfondo della lista
-        JScrollPane scrollPane = new JScrollPane(centralList); // Avvolge la lista in un JScrollPane
-        scrollPane.setBorder(new EmptyBorder(0, 0, 0, 0)); // Rimuove il bordo del JScrollPane
-        scrollPane.setBounds(125, 50, 550, 350); // Dimensione e posizione del JScrollPane
-        add(scrollPane);
+        // Create a panel with GridLayout to hold four lists
+        JPanel centralPanel = new JPanel(new GridLayout(2, 2, 10, 10)); // 2 rows, 2 columns, 10px gap
+        centralPanel.setBackground(Color.decode("#cb0606"));
+        centralPanel.setBounds(125, 50, 550, 350);
+        centralPanel.setBorder(new EmptyBorder(0, 0, 0, 0));
+        add(centralPanel);
+
+        // Create and configure the four JLists
+        centralList1 = createCentralList();
+        centralList2 = createCentralList();
+        centralList3 = createCentralList();
+        centralList4 = createCentralList();
+
+        //assenze
+
+        numeroAssenze = new JLabel("4");
+        numeroAssenze.setBounds(120, -100, 350, 350);
+        numeroAssenze.setFont(new Font("Arial", Font.BOLD, 50));
+        numeroAssenze.setForeground(Color.WHITE);
+
+        assenze = new JLabel("Assenze");
+        assenze.setBounds(100, 75, 75, 75);
+        assenze.setFont(new Font("Arial", Font.BOLD, 15));
+        assenze.setForeground(Color.WHITE);
+        centralList1.add(numeroAssenze);
+        centralList1.add(assenze);
+
+        //ritardi
+
+        numeroRitardi = new JLabel("10");
+        numeroRitardi.setBounds(112, -100, 350, 350);
+        numeroRitardi.setFont(new Font("Arial", Font.BOLD, 50));
+        numeroRitardi.setForeground(Color.WHITE);
+
+        ritardi = new JLabel("Ritardi");
+        ritardi.setBounds(112, 75, 75, 75);
+        ritardi.setFont(new Font("Arial", Font.BOLD, 15));
+        ritardi.setForeground(Color.WHITE);
+        centralList2.add(numeroRitardi);
+        centralList2.add(ritardi);
+
+        //presenze
+
+        numeroPresenze = new JLabel("15");
+        numeroPresenze.setBounds(112, -100, 350, 350);
+        numeroPresenze.setFont(new Font("Arial", Font.BOLD, 50));
+        numeroPresenze.setForeground(Color.WHITE);
+
+        presenze = new JLabel("Presenze");
+        presenze.setBounds(112, 75, 75, 75);
+        presenze.setFont(new Font("Arial", Font.BOLD, 15));
+        presenze.setForeground(Color.WHITE);
+        centralList3.add(numeroPresenze);
+        centralList3.add(presenze);
+
+        //Uscite
+
+        numeroUscite = new JLabel("35");
+        numeroUscite.setBounds(112, -100, 350, 350);
+        numeroUscite.setFont(new Font("Arial", Font.BOLD, 50));
+        numeroUscite.setForeground(Color.WHITE);
+
+        uscite = new JLabel("Uscite");
+        uscite.setBounds(112, 75, 75, 75);
+        uscite.setFont(new Font("Arial", Font.BOLD, 15));
+        uscite.setForeground(Color.WHITE);
+        centralList4.add(numeroUscite);
+        centralList4.add(uscite);
+
+
+        // Add the lists to JScrollPane and then to the central panel
+        centralPanel.add(new JScrollPane(centralList1));
+        centralPanel.add(new JScrollPane(centralList2));
+        centralPanel.add(new JScrollPane(centralList3));
+        centralPanel.add(new JScrollPane(centralList4));
 
         // Pannello inferiore per registrare presenze e voti
         JButton storico = new JButton("STORICO EVENTI");
@@ -63,6 +136,13 @@ public class RegistroElettronicoApp extends JFrame {
         markPresenceButton.setForeground(Color.WHITE); // Imposta il colore del testo del pulsante
         markPresenceButton.setBackground(Color.decode("#d15c5c")); // Imposta il colore di sfondo del pulsante
         add(markPresenceButton);
+    }
+
+    private JList<String> createCentralList() {
+        JList<String> list = new JList<>(new DefaultListModel<>());
+        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        list.setBackground(Color.decode("#d15c5c"));
+        return list;
     }
 
     class Student {

@@ -36,7 +36,7 @@ public class JTimbratrice extends JFrame implements ActionListener {
 
         // Caricamento e ridimensionamento dell'immagine con alta qualità usando imgscalr
         try {
-            BufferedImage originalImage = ImageIO.read(new File("C:\\Users\\iemmo\\Desktop\\Stage\\Gruppo\\SCRITTA_PNG.png"));
+            BufferedImage originalImage = ImageIO.read(Main.class.getClassLoader().getResource("SCRITTA_PNG.png"));
             int originalWidth = originalImage.getWidth();
             int originalHeight = originalImage.getHeight();
             int targetWidth = 150; // Riduzione ulteriore della larghezza
