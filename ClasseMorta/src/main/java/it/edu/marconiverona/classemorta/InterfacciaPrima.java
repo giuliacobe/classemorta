@@ -39,6 +39,13 @@ public class InterfacciaPrima {
         buttonTotem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        new JTimbratrice();
+                    }
+                });
+                frame.dispose();
             }
         });
         buttonRegistro.addActionListener(new ActionListener() {
