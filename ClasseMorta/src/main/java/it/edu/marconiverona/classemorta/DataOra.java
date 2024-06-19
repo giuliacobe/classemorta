@@ -4,8 +4,7 @@ import java.util.Calendar;
 
 /**
  *Iemmolo Gioele
- * 
- * Classe: 4DI - 21/12/2023
+ *
  */
 public class DataOra {
     private Calendar c;
