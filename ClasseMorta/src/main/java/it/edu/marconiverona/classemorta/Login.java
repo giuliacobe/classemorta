@@ -303,7 +303,7 @@ public class Login extends javax.swing.JFrame {
         this.dispose();
     }
 
-    public void afterLogin() {
+    public void afterLogin() throws SQLException {
         RegistroElettronicoApp app = new RegistroElettronicoApp();
         app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         app.setVisible(true);

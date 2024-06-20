@@ -7,6 +7,8 @@ package it.edu.marconiverona.classemorta;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -31,7 +33,7 @@ public class RegistroElettronicoApp extends JFrame {
     private List<Student> students;
     private Image backgroundImage;
 
-    public RegistroElettronicoApp() {
+    public RegistroElettronicoApp() throws SQLException {
         try {
 
             backgroundImage = ImageIO.read(Main.class.getClassLoader().getResource("Filgrana_classemorta.png"));
@@ -201,15 +203,83 @@ public class RegistroElettronicoApp extends JFrame {
         storico.setBackground(Color.decode("#d15c5c")); // Imposta il colore di sfondo del pulsante
         add(storico);
 
+
+        // BOX cose da giustificare
         studentComboBox = new JComboBox<>();
         studentComboBox.setBounds(150, 450, 200, 25); // Imposta la posizione e la dimensione del JComboBox
         add(studentComboBox);
+
+        String query10 = "SELECT assenzeDG, usciteDG, ritardiDG FROM DatiLogin WHERE fullName = ?";
+        PreparedStatement stmt = Main.conn.prepareStatement(query10);
+        stmt.setString(1, Login.getFullName());
+        ResultSet rs = stmt.executeQuery();
+        int asDG = 0;
+        int usDG = 0;
+        int ritDG = 0;
+        if (rs.next()) {
+            asDG = Integer.parseInt(rs.getString("assenzeDG"));
+            usDG = Integer.parseInt(rs.getString("usciteDG"));
+            ritDG = Integer.parseInt(rs.getString("ritardiDG"));
+        }
+
+        for (int i = 0; i < asDG; i++) {
+            studentComboBox.addItem("Assenza " + i + " Da Giustificare");
+        }
+        for (int i = 0; i < usDG; i++) {
+            studentComboBox.addItem("Uscita " + i + " Da Giustificare");
+        }
+        for (int i = 0; i < ritDG; i++) {
+            studentComboBox.addItem("Ritardo " + i + " Da Giustificare");
+        }
 
         markPresenceButton = new JButton("GIUSTIFICA EVENTO");
         markPresenceButton.setBounds(450, 420, 200, 25); // Imposta la posizione e la dimensione del pulsante
         markPresenceButton.setForeground(Color.WHITE); // Imposta il colore del testo del pulsante
         markPresenceButton.setBackground(Color.decode("#d15c5c")); // Imposta il colore di sfondo del pulsante
         add(markPresenceButton);
+        markPresenceButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String obj = (String) studentComboBox.getSelectedItem();
+                studentComboBox.removeItem(obj);
+                String ass = "Assenza";
+                String usc = "Uscita";
+                String rit = "Ritardo";
+                if (obj.startsWith(ass)) {
+                    String query12 = "UPDATE DatiLogin SET assenzeDG = assenzeDG - 1 WHERE fullName = ?";
+                    PreparedStatement stmt = null;
+                    try {
+                        stmt = Main.conn.prepareStatement(query12);
+                        stmt.setString(1, Login.getFullName());
+                        stmt.executeQuery();
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                } else if (obj.startsWith(usc)) {
+                    String query13 = "UPDATE DatiLogin SET usciteDG = usciteDG - 1 WHERE fullName = ?";
+                    PreparedStatement stmt = null;
+                    try {
+                        stmt = Main.conn.prepareStatement(query13);
+                        stmt.setString(1, Login.getFullName());
+                        stmt.executeQuery();
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                } else if (obj.startsWith(rit)) {
+                    String query14 = "UPDATE DatiLogin SET ritardiDG = ritardiDG - 1 WHERE fullName = ?";
+                    PreparedStatement stmt = null;
+                    try {
+                        stmt = Main.conn.prepareStatement(query14);
+                        stmt.setString(1, Login.getFullName());
+                        stmt.executeQuery();
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex);
+                    }
+
+                }
+            }
+        });
+
     }
 
     private JList<String> createCentralList() {

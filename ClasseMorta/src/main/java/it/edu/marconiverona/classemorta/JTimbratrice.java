@@ -146,10 +146,20 @@ public class JTimbratrice extends JFrame implements ActionListener {
             PreparedStatement stmt = Main.conn.prepareStatement(query);
             stmt.setString(1, fieldTesto.getText());
             stmt.executeQuery();
+            String query7 = "UPDATE DatiLogin SET ritardiDG = ritardiDG + 1 WHERE fullName = ?";
+            stmt = Main.conn.prepareStatement(query7);
+            stmt.setString(1, fieldTesto.getText());
+            stmt.executeQuery();
+
+
         } else if (now.getHour() > 13) {
             azione = "Assenza";
             String query = "UPDATE DatiLogin SET assenze = assenze + 1 WHERE fullName = ?";
             PreparedStatement stmt = Main.conn.prepareStatement(query);
+            stmt.setString(1, fieldTesto.getText());
+            stmt.executeQuery();
+            String query6 = "UPDATE DatiLogin SET assenzeDG = assenzeDG + 1 WHERE fullName = ?";
+            stmt = Main.conn.prepareStatement(query6);
             stmt.setString(1, fieldTesto.getText());
             stmt.executeQuery();
         }
@@ -167,6 +177,10 @@ public class JTimbratrice extends JFrame implements ActionListener {
         }
         String query = "UPDATE DatiLogin SET uscite = uscite + 1 WHERE fullName = ?";
         PreparedStatement stmt = Main.conn.prepareStatement(query);
+        stmt.setString(1, fieldTesto.getText());
+        stmt.executeQuery();
+        String query5 = "UPDATE DatiLogin SET usciteDG = usciteDG + 1 WHERE fullName = ?";
+        stmt = Main.conn.prepareStatement(query5);
         stmt.setString(1, fieldTesto.getText());
         stmt.executeQuery();
 
