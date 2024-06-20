@@ -10,10 +10,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Set;
 
 public class JTimbratrice extends JFrame implements ActionListener {
 
@@ -25,6 +28,8 @@ public class JTimbratrice extends JFrame implements ActionListener {
     private Timbratrice timb;
     private JLabel orologioLabel; // JLabel per visualizzare l'orologio
     private Timer timer; // Timer per aggiornare l'orologio
+    private Set<String> presentiOggi; // Set per tracciare i presenti
+
 
     public JTimbratrice() {
         setTitle("Timbratrice");
@@ -101,29 +106,76 @@ public class JTimbratrice extends JFrame implements ActionListener {
         String azione = "";
         if (e.getSource() == buttonEntrata) {
             azione = "Entrata";
+            try {
+                handleEntrata();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
         } else if (e.getSource() == buttonUscita) {
             azione = "Uscita";
-        }
-
-        DataOra oraCorrente = new DataOra();
-
-        String testo = fieldTesto.getText();
-        String elemento = azione + ": " + testo + " è l'inserimento";
-
-        if (azione.equals("Uscita")) {
-            Timbratura entrata = timb.getUltimaEntrata(fieldTesto.getText());
-            if (entrata != null) {
-                Durata durata = new Durata(entrata, oraCorrente);
-                elemento += " - Durata: " + durata.toString();
-            } else {
-                elemento += " - Nessuna timbratura di entrata precedente";
+            try {
+                handleUscita();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
             }
         }
-        if (!fieldTesto.getText().isEmpty()) {
-            contenutoLista.addElement(elemento);
-            timb.timbra(testo, azione);
-            fieldTesto.setText("");
+
+        String testo = fieldTesto.getText();
+        if (!testo.isEmpty()) {
+            presentiOggi.add(testo);
         }
+    }
+
+    private void handleEntrata() throws SQLException {
+        String testo = fieldTesto.getText();
+        if (testo.isEmpty()) {
+            return;
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+        String azione = "";
+        if (now.getHour() < 8) {
+            azione = "Presenza";
+            String query = "UPDATE DatiLogin SET presenze = presenze + 1 WHERE fullName = ?";
+            PreparedStatement stmt = Main.conn.prepareStatement(query);
+            stmt.setString(1, fieldTesto.getText());
+            stmt.executeQuery();
+        } else if (now.getHour() > 8 && now.getHour() < 13) {
+            azione = "Ritardo";
+            String query = "UPDATE DatiLogin SET ritardi = ritardi + 1 WHERE fullName = ?";
+            PreparedStatement stmt = Main.conn.prepareStatement(query);
+            stmt.setString(1, fieldTesto.getText());
+            stmt.executeQuery();
+        } else if (now.getHour() > 13) {
+            azione = "Assenza";
+            String query = "UPDATE DatiLogin SET assenze = assenze + 1 WHERE fullName = ?";
+            PreparedStatement stmt = Main.conn.prepareStatement(query);
+            stmt.setString(1, fieldTesto.getText());
+            stmt.executeQuery();
+        }
+
+        String elemento = azione + ": " + testo;
+        contenutoLista.addElement(elemento);
+        timb.timbra(testo, azione);
+        fieldTesto.setText("");
+    }
+
+    private void handleUscita() throws SQLException {
+        String testo = fieldTesto.getText();
+        if (testo.isEmpty()) {
+            return;
+        }
+        String query = "UPDATE DatiLogin SET uscite = uscite + 1 WHERE fullName = ?";
+        PreparedStatement stmt = Main.conn.prepareStatement(query);
+        stmt.setString(1, fieldTesto.getText());
+        stmt.executeQuery();
+
+        DataOra oraCorrente = new DataOra();
+        String elemento = "Uscita: " + testo + " è l'inserimento";
+
+        contenutoLista.addElement(elemento);
+        timb.timbra(testo, "Uscita");
+        fieldTesto.setText("");
     }
 
     // Metodo per aggiornare l'orologio

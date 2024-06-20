@@ -121,7 +121,7 @@ public class Login extends javax.swing.JFrame {
         jButton1.setText("Login");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                String query = "SELECT email, password FROM DatiLogin WHERE email = ?;";
+                String query = "SELECT email, password FROM DatiLogin WHERE email = ?";
                 try (PreparedStatement stmt = Main.conn.prepareStatement(query)) {
                     stmt.setString(1, jTextField1.getText());
                     try (ResultSet rs = stmt.executeQuery()) {
@@ -345,7 +345,7 @@ public class Login extends javax.swing.JFrame {
 
     public static String getFullName() {
         String fullName = null;
-        String query = "SELECT fullName FROM DatiLogin WHERE email = ?;";
+        String query = "SELECT fullName FROM DatiLogin WHERE email = ?";
         try (PreparedStatement stmt = Main.conn.prepareStatement(query)) {
             stmt.setString(1, jTextField1.getText());
             try (ResultSet rs = stmt.executeQuery()) {

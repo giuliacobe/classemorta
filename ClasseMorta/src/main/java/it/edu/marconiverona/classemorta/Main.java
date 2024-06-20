@@ -11,9 +11,9 @@ import java.sql.*;
  * @author 19929
  */
 public class Main {
-    public static String url = "jdbc:mysql://localhost:3306/classemortadb?useSSL=false";
-    public static String user = "root";
-    public static String password = "";
+    public static String url = "jdbc:oracle:thin:@//oraclecorso.addvalue.it:1521/XEPDB1";
+    public static String user = "USERCORSO3";
+    public static String password = "usercorso3";
     public static Connection conn;
 
     static {
@@ -35,7 +35,7 @@ public class Main {
     }
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException, FileNotFoundException, IOException {
-        Class.forName("com.mysql.cj.jdbc.Driver");
+        Class.forName("oracle.jdbc.driver.OracleDriver");
         InterfacciaPrima.creazione();
     }
 }

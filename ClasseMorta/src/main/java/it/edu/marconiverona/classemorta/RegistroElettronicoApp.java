@@ -4,8 +4,13 @@
  */
 package it.edu.marconiverona.classemorta;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.border.EmptyBorder;
@@ -24,14 +29,31 @@ public class RegistroElettronicoApp extends JFrame {
     private JComboBox<String> studentComboBox;
     private JButton markPresenceButton;
     private List<Student> students;
+    private Image backgroundImage;
 
     public RegistroElettronicoApp() {
+        try {
+
+            backgroundImage = ImageIO.read(Main.class.getClassLoader().getResource("Filgrana_classemorta.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         students = new ArrayList<>();
         setTitle("Registro Elettronico");
-        getContentPane().setBackground(Color.decode("#cb0606"));
         setResizable(false);
         setSize(800, 600);
         setLayout(null);
+
+        JPanel contentPane = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+            }
+        };
+        setContentPane(contentPane);
+        contentPane.setLayout(null);
 
         JLabel nameLabel = new JLabel("NOME STUDENTE:" + Login.getFullName());
         nameLabel.setBounds(300, 10, 250, 25);
@@ -58,7 +80,20 @@ public class RegistroElettronicoApp extends JFrame {
 
         //assenze
 
-        numeroAssenze = new JLabel("4");
+        String query = "SELECT assenze FROM DatiLogin WHERE fullName = ?";
+        String nAssenze = null;
+        try (PreparedStatement stmt = Main.conn.prepareStatement(query)) {
+            stmt.setString(1, Login.getFullName());
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    nAssenze = rs.getString("assenze");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        numeroAssenze = new JLabel(nAssenze);
         numeroAssenze.setBounds(120, -100, 350, 350);
         numeroAssenze.setFont(new Font("Arial", Font.BOLD, 50));
         numeroAssenze.setForeground(Color.WHITE);
@@ -72,7 +107,20 @@ public class RegistroElettronicoApp extends JFrame {
 
         //ritardi
 
-        numeroRitardi = new JLabel("10");
+        String query4 = "SELECT ritardi FROM DatiLogin WHERE fullName = ?";
+        String nRitardi = null;
+        try (PreparedStatement stmt = Main.conn.prepareStatement(query4)) {
+            stmt.setString(1, Login.getFullName());
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    nRitardi = rs.getString("ritardi");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        numeroRitardi = new JLabel(nRitardi);
         numeroRitardi.setBounds(112, -100, 350, 350);
         numeroRitardi.setFont(new Font("Arial", Font.BOLD, 50));
         numeroRitardi.setForeground(Color.WHITE);
@@ -86,7 +134,20 @@ public class RegistroElettronicoApp extends JFrame {
 
         //presenze
 
-        numeroPresenze = new JLabel("15");
+        String query2 = "SELECT presenze FROM DatiLogin WHERE fullName = ?";
+        String nPresenze = null;
+        try (PreparedStatement stmt = Main.conn.prepareStatement(query2)) {
+            stmt.setString(1, Login.getFullName());
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    nPresenze = rs.getString("presenze");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        numeroPresenze = new JLabel(nPresenze);
         numeroPresenze.setBounds(112, -100, 350, 350);
         numeroPresenze.setFont(new Font("Arial", Font.BOLD, 50));
         numeroPresenze.setForeground(Color.WHITE);
@@ -100,7 +161,20 @@ public class RegistroElettronicoApp extends JFrame {
 
         //Uscite
 
-        numeroUscite = new JLabel("35");
+        String query3 = "SELECT uscite FROM DatiLogin WHERE fullName = ?";
+        String nUscite = null;
+        try (PreparedStatement stmt = Main.conn.prepareStatement(query3)) {
+            stmt.setString(1, Login.getFullName());
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    nUscite = rs.getString("uscite");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        numeroUscite = new JLabel(nUscite);
         numeroUscite.setBounds(112, -100, 350, 350);
         numeroUscite.setFont(new Font("Arial", Font.BOLD, 50));
         numeroUscite.setForeground(Color.WHITE);
