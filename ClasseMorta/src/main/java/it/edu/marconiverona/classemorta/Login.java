@@ -120,7 +120,9 @@ public class Login extends javax.swing.JFrame {
                         if (rs.next()) {
                             String emailFromDB = rs.getString("email");
                             String passFromDB = rs.getString("password");
-                            if (passFromDB.equals(getPassword()) && emailFromDB.equals(jTextField1.getText())) {
+                            if ("Preside".equals(passFromDB) && "Preside".equals(emailFromDB)) {
+                                afterPreside();
+                            } else if (passFromDB.equals(getPassword()) && emailFromDB.equals(jTextField1.getText())) {
                                 afterLogin();
                             }
                         }
@@ -302,6 +304,16 @@ public class Login extends javax.swing.JFrame {
         this.dispose();
     }
 
+    public void afterPreside() {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new RegistroPreside();
+            }
+        });
+        this.dispose();
+    }
+
     public String getPassword() {
         return new String(jPasswordField1.getPassword());
     }
@@ -351,7 +363,7 @@ public class Login extends javax.swing.JFrame {
         return fullName;
     }
 
-    public void tornaIndietro(){
+    public void tornaIndietro() {
         InterfacciaPrima.creazione();
         this.dispose();
     }

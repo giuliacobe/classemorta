@@ -26,6 +26,7 @@ public class RegistroElettronicoApp extends JFrame {
     private JList<String> centralList1, centralList2, centralList3, centralList4;
     private JComboBox<String> studentComboBox;
     private JButton markPresenceButton;
+    private JButton comunicazioni;
     private List<Student> students;
     private Image backgroundImage;
 
@@ -304,6 +305,21 @@ public class RegistroElettronicoApp extends JFrame {
             }
         });
 
+        comunicazioni = new JButton("COMUNICAZIONI");
+        comunicazioni.setBounds(450, 450, 200, 25); // Imposta la posizione e la dimensione del pulsante
+        comunicazioni.setForeground(Color.WHITE); // Imposta il colore del testo del pulsante
+        comunicazioni.setBackground(Color.decode("#d15c5c")); // Imposta il colore di sfondo del pulsante
+        add(comunicazioni);
+        comunicazioni.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    apriComunicazioni();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
     }
 
     private JList<String> createCentralList() {
@@ -349,4 +365,10 @@ public class RegistroElettronicoApp extends JFrame {
         InterfacciaPrima.creazione();
         this.dispose();
     }
+
+    public void apriComunicazioni() throws SQLException {
+        new Comunicazioni();
+        this.dispose();
+    }
+
 }
