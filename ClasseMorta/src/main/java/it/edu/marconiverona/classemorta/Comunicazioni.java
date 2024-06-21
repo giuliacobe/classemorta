@@ -37,18 +37,7 @@ public class Comunicazioni extends JFrame {
         // Aggiungi la label al pannello
         panel.add(label);
 
-        String linee2 = "SELECT COUNT(comunicazione) AS numero_di_righe FROM Comun";
-        try (PreparedStatement stmt = Main.conn.prepareStatement(linee2)) {
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    nRow2 = rs.getInt("numero_di_righe");
-                    for (int k = 0; k < nRow2; k++) {
-                        createString();
-                    }
-                }
-            }
-        }
-
+        crea();
 
         // Aggiungi il pannello al frame
         add(panel, BorderLayout.CENTER);
@@ -105,8 +94,22 @@ public class Comunicazioni extends JFrame {
                 if (rs.next()) {
                     nRow = rs.getInt("numero_di_righe");
                     str = "Comunicazione: " + addText() + "\n";
-                        tot = "\n" + tot + str + "\n";
+                    tot = "\n" + tot + str + "\n";
                     label.setText(tot);
+                }
+            }
+        }
+    }
+
+    public void crea() throws SQLException {
+        String linee2 = "SELECT COUNT(comunicazione) AS numero_di_righe FROM Comun";
+        try (PreparedStatement stmt = Main.conn.prepareStatement(linee2)) {
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    nRow2 = rs.getInt("numero_di_righe");
+                    for (int k = 0; k < nRow2; k++) {
+                        createString();
+                    }
                 }
             }
         }

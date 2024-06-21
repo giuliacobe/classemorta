@@ -9,7 +9,7 @@ import java.sql.SQLException;
 
 
 public class RegistroPreside extends JFrame implements ActionListener {
-    public static JTextArea listaScrollabile;
+    public static JTextField listaScrollabile;
     private JLabel titolo;
     private JButton buttonInvia;
 
@@ -29,7 +29,7 @@ public class RegistroPreside extends JFrame implements ActionListener {
         buttonInvia.setBounds(100, 400, 400, 50);
         buttonInvia.addActionListener(this);
 
-        listaScrollabile = new JTextArea();
+        listaScrollabile = new JTextField();
         listaScrollabile.setBounds(100, 100, 400, 300);
 
         add(titolo); // Aggiunge titolo al frame
