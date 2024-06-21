@@ -232,6 +232,34 @@ public class RegistroElettronicoApp extends JFrame {
             studentComboBox.addItem("Ritardo " + i + " Da Giustificare");
         }
 
+
+        JButton jButton4 = new JButton();
+        jButton4.setFont(new java.awt.Font("Segoe UI", 0, 20));
+        jButton4.setText("Home");
+        jButton4.setForeground(new java.awt.Color(255, 255, 255));
+        jButton4.setOpaque(false);
+        jButton4.setContentAreaFilled(false);
+        jButton4.setBorderPainted(false);
+        jButton4.setDefaultCapable(false);
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tornaIndietro();
+            }
+        });
+        jButton4.setBackground(null);
+        jButton4.setFont(new java.awt.Font("Segoe UI", 0, 14));
+        jButton4.setBounds(-20, -5, 93, 36);
+        add(jButton4);
+        jButton4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jButton4.setForeground(new java.awt.Color(255, 255, 255));
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jButton4.setForeground(new java.awt.Color(255, 255, 255));
+            }
+        });
+
         markPresenceButton = new JButton("GIUSTIFICA EVENTO");
         markPresenceButton.setBounds(450, 420, 200, 25); // Imposta la posizione e la dimensione del pulsante
         markPresenceButton.setForeground(Color.WHITE); // Imposta il colore del testo del pulsante
@@ -319,5 +347,10 @@ public class RegistroElettronicoApp extends JFrame {
         public List<Integer> getGrades() {
             return grades;
         }
+    }
+
+    public void tornaIndietro() {
+        InterfacciaPrima.creazione();
+        this.dispose();
     }
 }
