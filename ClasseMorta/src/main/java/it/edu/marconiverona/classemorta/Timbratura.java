@@ -1,18 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package it.edu.marconiverona.classemorta;
 
 
-
-/**
- *Iemmolo Gioele
- * 
- * Classe: 4DI - 21/12/2023
- *  
- */
-public class Timbratura extends DataOra implements java.io.Serializable{
+public class Timbratura extends DataOra implements java.io.Serializable {
     private String codiceUtente;
     private String verso; // "Entrata" o "Uscita"
     
@@ -24,7 +13,7 @@ public class Timbratura extends DataOra implements java.io.Serializable{
         this.verso = verso;
         
     }
-    
+
     public String getUtente()
     {
         return codiceUtente;
@@ -33,6 +22,7 @@ public class Timbratura extends DataOra implements java.io.Serializable{
     {
         return verso;
     }
+
     @Override
     public String toString() 
     {

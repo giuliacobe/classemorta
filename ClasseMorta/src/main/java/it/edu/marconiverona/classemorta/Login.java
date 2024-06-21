@@ -1,26 +1,18 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package it.edu.marconiverona.classemorta;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.io.File;
-import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- * @author ferna
- */
+
+
 public class Login extends javax.swing.JFrame {
 
-    public static javax.swing.JTextField jTextField1 = new javax.swing.JTextField();
+    public static javax.swing.JTextField jTextField1 = new  javax.swing.JTextField();
 
 
     public Login() {

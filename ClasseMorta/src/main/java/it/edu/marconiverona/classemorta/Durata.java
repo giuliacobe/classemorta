@@ -1,14 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package it.edu.marconiverona.classemorta;
 
+
+
 public class Durata {
-    
+
     long secondi;
 
-    
     public Durata(DataOra ini, DataOra end) {
         secondi = end.get() - ini.get();
     }

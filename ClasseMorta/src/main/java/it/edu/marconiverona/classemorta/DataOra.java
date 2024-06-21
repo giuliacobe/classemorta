@@ -2,11 +2,8 @@ package it.edu.marconiverona.classemorta;
 
 import java.util.Calendar;
 
-/**
- *Iemmolo Gioele
- * 
- * Classe: 4DI - 21/12/2023
- */
+
+
 public class DataOra {
     private Calendar c;
     private long istante; // secondi trascorsi da inizio Epoca (01/01/1970)

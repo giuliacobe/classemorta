@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package it.edu.marconiverona.classemorta;
 
 import javax.imageio.ImageIO;
@@ -67,14 +63,14 @@ public class RegistroElettronicoApp extends JFrame {
         add(nameLabel);
         add(studentNameLabel);
 
-        // Create a panel with GridLayout to hold four lists
+
         JPanel centralPanel = new JPanel(new GridLayout(2, 2, 10, 10)); // 2 rows, 2 columns, 10px gap
         centralPanel.setBackground(Color.decode("#cb0606"));
         centralPanel.setBounds(125, 50, 550, 350);
         centralPanel.setBorder(new EmptyBorder(0, 0, 0, 0));
         add(centralPanel);
 
-        // Create and configure the four JLists
+
         centralList1 = createCentralList();
         centralList2 = createCentralList();
         centralList3 = createCentralList();
@@ -189,7 +185,7 @@ public class RegistroElettronicoApp extends JFrame {
         centralList4.add(uscite);
 
 
-        // Add the lists to JScrollPane and then to the central panel
+
         centralPanel.add(new JScrollPane(centralList1));
         centralPanel.add(new JScrollPane(centralList2));
         centralPanel.add(new JScrollPane(centralList3));

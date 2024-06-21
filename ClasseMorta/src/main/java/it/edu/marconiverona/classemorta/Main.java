@@ -1,15 +1,9 @@
-/*
- * Iemmolo Gioele Carmelo 4Di
- * ESEGUIRE QUESTA CLASSE MAIN PER UTILIZZARE IL TOTEM (JTimbratrice GRAFICA)
- */
 package it.edu.marconiverona.classemorta;
 
 import java.io.*;
 import java.sql.*;
 
-/**
- * @author 19929
- */
+
 public class Main {
     public static String url = "jdbc:oracle:thin:@//oraclecorso.addvalue.it:1521/XEPDB1";
     public static String user = "USERCORSO3";

@@ -4,13 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-/**
- * @author ferna
- */
+
 public class SignUp extends javax.swing.JFrame {
 
     static javax.swing.JTextField jtext2 = new javax.swing.JTextField();
