@@ -167,7 +167,7 @@ public class JTimbratrice extends JFrame implements ActionListener {
             PreparedStatement stmt = Main.conn.prepareStatement(query);
             stmt.setString(1, fieldTesto.getText());
             stmt.executeQuery();
-        } else if (now.getHour() > 8 && now.getHour() < 13) {
+        } else if (now.getHour() >= 8 && now.getHour() < 13) {
             azione = "Ritardo";
             String query = "UPDATE DatiLogin SET ritardi = ritardi + 1 WHERE fullName = ?";
             PreparedStatement stmt = Main.conn.prepareStatement(query);
@@ -179,7 +179,7 @@ public class JTimbratrice extends JFrame implements ActionListener {
             stmt.executeQuery();
 
 
-        } else if (now.getHour() > 13) {
+        } else if (now.getHour() >= 13) {
             azione = "Assenza";
             String query = "UPDATE DatiLogin SET assenze = assenze + 1 WHERE fullName = ?";
             PreparedStatement stmt = Main.conn.prepareStatement(query);
