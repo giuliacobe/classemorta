@@ -32,7 +32,6 @@ public class RegistroElettronicoApp extends JFrame {
 
     public RegistroElettronicoApp() throws SQLException {
         try {
-
             backgroundImage = ImageIO.read(Main.class.getClassLoader().getResource("Filgrana_classemorta.png"));
         } catch (IOException e) {
             e.printStackTrace();
