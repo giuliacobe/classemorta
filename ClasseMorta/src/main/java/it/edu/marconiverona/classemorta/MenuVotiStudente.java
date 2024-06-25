@@ -93,7 +93,7 @@ public class MenuVotiStudente extends JFrame {
     }
 
     private void loadStudentGrades(String materia) throws SQLException {
-        String query = "SELECT fullName, voto FROM voti WHERE fullName = ? AND materia = ?";
+        String query = "SELECT fullName, voto, tipoProva FROM voti WHERE fullName = ? AND materia = ?";
         try (PreparedStatement stmt = Main.conn.prepareStatement(query)) {
             stmt.setString(1, Login.getFullName());
             stmt.setString(2, materia);
@@ -102,12 +102,14 @@ public class MenuVotiStudente extends JFrame {
                 while (rs.next()) {
                     String fullName = rs.getString("fullName");
                     String voto = rs.getString("voto");
-                    grades.computeIfAbsent(fullName, k -> new ArrayList<>()).add(voto);
+                    String tipoProva = rs.getString("tipoProva");  // Fetch the test type
+                    grades.computeIfAbsent(fullName, k -> new ArrayList<>()).add(voto + " (" + tipoProva + ")");  // Include the test type
                 }
                 studentGrades.put(materia, grades);
             }
         }
     }
+
 
     private void displayStudentGrades(String materia) {
         Map<String, List<String>> grades = studentGrades.get(materia);
@@ -121,10 +123,14 @@ public class MenuVotiStudente extends JFrame {
         for (Map.Entry<String, List<String>> entry : grades.entrySet()) {
             String student = entry.getKey();
             List<String> studentGrades = entry.getValue();
-            message.append(student).append(": ");
+            message.append(student).append(": " + "\n");
             double somma = 0;
             int count = 0;
-            for (String grade : studentGrades) {
+            for (String gradeWithTipo : studentGrades) {
+                String[] parts = gradeWithTipo.split(" \\(");
+                String grade = parts[0];
+                String tipoProva = parts[1].replace(")", "");
+
                 if (grade.contains("1/2")) {
                     double votoMezzo = Double.parseDouble(String.valueOf(grade.charAt(0)));
                     votoMezzo += Double.parseDouble("0.5");
@@ -137,7 +143,7 @@ public class MenuVotiStudente extends JFrame {
                 }
             }
             double media = somma / count;
-            message.append(String.join("  -  ", studentGrades));
+            message.append(String.join("\n", studentGrades));
             message.append("\n");
             message.append("Media: ").append(String.format("%.2f", media));
             message.append("\n");
@@ -145,6 +151,7 @@ public class MenuVotiStudente extends JFrame {
 
         gradesDisplay.setText(message.toString());
     }
+
 
     public void tornaIndietro() throws SQLException {
         RegistroElettronicoApp app = new RegistroElettronicoApp();

@@ -8,7 +8,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.swing.border.EmptyBorder;
 
 public class RegistroDocenti extends JFrame {
@@ -17,8 +19,11 @@ public class RegistroDocenti extends JFrame {
     private Image backgroundImage;
     private JComboBox<String> studentComboBox;
     private JComboBox<String> voto;
+    private JComboBox<String> tipoProva;
     private JComboBox<String> materiaComboBox;
     private JButton conferma;
+    private Map<String, Map<String, List<String>>> studentGrades;
+    private static JTextArea gradesDisplay;
 
     public RegistroDocenti() throws SQLException {
         try {
@@ -44,7 +49,7 @@ public class RegistroDocenti extends JFrame {
         contentPane.setLayout(null);
 
         JLabel nameLabel = new JLabel("DOCENTE: " + Login.getFullName());
-        nameLabel.setBounds(300, 10, 250, 25);
+        nameLabel.setBounds(300, 10, 400, 25);
         nameLabel.setFont(new Font("Arial", Font.BOLD, 14));
         nameLabel.setForeground(Color.WHITE);
         studentNameLabel = new JLabel();
@@ -67,16 +72,33 @@ public class RegistroDocenti extends JFrame {
         materiaComboBox.setBounds(125, 110, 450, 50); // Set position and size of the JComboBox for materie
         materiaComboBox.setFont(new Font("Arial", Font.BOLD, 20));
         add(materiaComboBox);
-        loadMaterie(); // Method to load subjects
+        loadMaterie();
+
+        gradesDisplay = new JTextArea();
+        gradesDisplay.setOpaque(false);
+        studentGrades = new HashMap<>();
+        caricavoti();
+
+        gradesDisplay.setEditable(false);
+        gradesDisplay.setBounds(125, 200, 600, 100);
+        gradesDisplay.setFont(new Font("Segoe UI", Font.PLAIN, 17));
+        gradesDisplay.setForeground(Color.white);
+        add(gradesDisplay);
 
         JLabel logo = new JLabel(new ImageIcon(Main.class.getClassLoader().getResource("4-3_docenti-no_bg.png")));
         add(logo);
-        logo.setBounds(100, 100, 600, 300);
+        logo.setBounds(100, 325, 600, 300);
 
         voto = new JComboBox<>();
         voto.setBounds(600, 50, 75, 50); // Set position and size of the JComboBox
         voto.setFont(new Font("Arial", Font.BOLD, 20));
         add(voto);
+
+        tipoProva = new JComboBox<>();
+        tipoProva.setBounds(600, 110, 75, 50); // Set position and size of the JComboBox
+        tipoProva.setFont(new Font("Arial", Font.BOLD, 20));
+        add(tipoProva);
+        loadTipoProva();
         loadVoti();
         loadStudentNames();
 
@@ -121,6 +143,24 @@ public class RegistroDocenti extends JFrame {
                 jButton4.setForeground(new java.awt.Color(255, 255, 255));
             }
         });
+
+        studentComboBox.addActionListener(e -> {
+            try {
+                loadStudentGrades();
+                displayStudentGrades();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        materiaComboBox.addActionListener(e -> {
+            try {
+                loadStudentGrades();
+                displayStudentGrades();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        });
     }
 
     private void loadStudentNames() throws SQLException {
@@ -136,6 +176,88 @@ public class RegistroDocenti extends JFrame {
 
         rs.close();
         stmt.close();
+    }
+
+    private void loadStudentGrades() throws SQLException {
+        String selectedStudent = (String) studentComboBox.getSelectedItem();
+        String selectedSubject = (String) materiaComboBox.getSelectedItem();
+
+        if (selectedStudent == null || selectedSubject == null) {
+            gradesDisplay.setText("Seleziona uno studente e una materia.");
+            return;
+        }
+
+        String query = "SELECT voto FROM voti WHERE fullName = ? AND materia = ?";
+        PreparedStatement stmt = Main.conn.prepareStatement(query);
+        stmt.setString(1, selectedStudent);
+        stmt.setString(2, selectedSubject);
+        ResultSet rs = stmt.executeQuery();
+
+        List<String> grades = new ArrayList<>();
+        while (rs.next()) {
+            grades.add(rs.getString("voto"));
+        }
+
+        if (!studentGrades.containsKey(selectedStudent)) {
+            studentGrades.put(selectedStudent, new HashMap<>());
+        }
+
+        studentGrades.get(selectedStudent).put(selectedSubject, grades);
+
+        rs.close();
+        stmt.close();
+    }
+
+    private void displayStudentGrades() {
+        String selectedStudent = (String) studentComboBox.getSelectedItem();
+        String selectedSubject = (String) materiaComboBox.getSelectedItem();
+
+        if (selectedStudent == null || selectedSubject == null) {
+            gradesDisplay.setText("Seleziona uno studente e una materia.");
+            return;
+        }
+
+        Map<String, List<String>> subjectGrades = studentGrades.get(selectedStudent);
+        if (subjectGrades == null || !subjectGrades.containsKey(selectedSubject)) {
+            gradesDisplay.setText("Nessun voto trovato per lo studente " + selectedStudent + " nella materia " + selectedSubject);
+            return;
+        }
+
+        List<String> grades = subjectGrades.get(selectedSubject);
+        StringBuilder message = new StringBuilder("Voti per " + selectedStudent + " nella materia " + selectedSubject + ":\n");
+
+        double sum = 0;
+        int count = 0;
+        for (String grade : grades) {
+            if (grade.contains("1/2")) {
+                double halfGrade = Double.parseDouble(grade.split(" ")[0]) + 0.5;
+                sum += halfGrade;
+                count++;
+            } else {
+                double fullGrade = Double.parseDouble(grade);
+                sum += fullGrade;
+                count++;
+            }
+            message.append(grade).append("  -  ");
+        }
+
+        if (count > 0) {
+            double average = sum / count;
+            message.append("\nMedia: ").append(String.format("%.2f", average));
+        } else {
+            message.append("Nessun voto disponibile.");
+        }
+
+        gradesDisplay.setText(message.toString());
+    }
+
+    public void caricavoti() throws SQLException {
+        if (!studentGrades.isEmpty()) {
+            String firstStudent = studentGrades.keySet().iterator().next();
+            String firstSubject = studentGrades.get(firstStudent).keySet().iterator().next();
+            loadStudentGrades();
+            displayStudentGrades();
+        }
     }
 
     public void loadVoti() {
@@ -154,6 +276,13 @@ public class RegistroDocenti extends JFrame {
         voto.addItem("9");
         voto.addItem("9 1/2");
         voto.addItem("10");
+    }
+
+    public void loadTipoProva(){
+        tipoProva.addItem("Orale");
+        tipoProva.addItem("Scritta");
+        tipoProva.addItem("Pratica");
+
     }
 
     public void loadMaterie() {
@@ -205,15 +334,21 @@ public class RegistroDocenti extends JFrame {
     }
 
     public void inserisciVoto() throws SQLException {
-        String query17 = "INSERT INTO voti(materia, fullName, voto) VALUES(?, ?, ?)";
+        String query17 = "INSERT INTO voti(materia, fullName, voto, tipoProva) VALUES(?, ?, ?, ?)";
         PreparedStatement stmt = Main.conn.prepareStatement(query17);
         String materia = materiaComboBox.getSelectedItem().toString();
         String fullName = studentComboBox.getSelectedItem().toString();
         String voto2 = voto.getSelectedItem().toString();
+        String tipo = tipoProva.getSelectedItem().toString();
         stmt.setString(1, materia);
         stmt.setString(2, fullName);
         stmt.setString(3, voto2);
+        stmt.setString(4, tipo);
         stmt.executeUpdate();
         stmt.close();
+
+        // Refresh grades display after inserting a new grade
+        loadStudentGrades();
+        displayStudentGrades();
     }
 }

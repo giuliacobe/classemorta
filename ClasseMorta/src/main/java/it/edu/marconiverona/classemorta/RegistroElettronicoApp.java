@@ -54,7 +54,7 @@ public class RegistroElettronicoApp extends JFrame {
         contentPane.setLayout(null);
 
         JLabel nameLabel = new JLabel("NOME STUDENTE:" + Login.getFullName());
-        nameLabel.setBounds(300, 10, 250, 25);
+        nameLabel.setBounds(300, 10, 400, 25);
         nameLabel.setFont(new Font("Arial", Font.BOLD, 14));
         nameLabel.setForeground(Color.WHITE);
         studentNameLabel = new JLabel();
