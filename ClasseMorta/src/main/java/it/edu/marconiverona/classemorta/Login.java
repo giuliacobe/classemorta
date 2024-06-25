@@ -9,10 +9,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 
-
 public class Login extends javax.swing.JFrame {
 
-    public static javax.swing.JTextField jTextField1 = new  javax.swing.JTextField();
+    public static javax.swing.JTextField jTextField1 = new javax.swing.JTextField();
 
 
     public Login() {
@@ -120,14 +119,17 @@ public class Login extends javax.swing.JFrame {
                         if (rs.next()) {
                             String emailFromDB = rs.getString("email");
                             String passFromDB = rs.getString("password");
-                            if ("Preside".equals(passFromDB) && "Preside".equals(emailFromDB)) {
+                            if (passFromDB.equals(passFromDB) && emailFromDB.contains("@preside.com")) {
                                 afterPreside();
-                            } else if (passFromDB.equals(getPassword()) && emailFromDB.equals(jTextField1.getText())) {
+                            } else if (emailFromDB.contains("@docenti.com") && passFromDB.equals(getPassword())) {
+                                afterDocenti();
+                            } else if (passFromDB.equals(getPassword()) && emailFromDB.contains("@studenti.com")) {
                                 afterLogin();
                             }
                         }
                     }
-                } catch (SQLException e) {
+                } catch (
+                        SQLException e) {
                     e.printStackTrace();
                 }
             }
@@ -135,8 +137,12 @@ public class Login extends javax.swing.JFrame {
 
         jLabel4.setText("I don't have an account");
 
-        this.enableDefaultValue(jTextField1, "example@example.com");
-        this.enableDefaultValue(jPasswordField1, "********");
+        this.
+
+                enableDefaultValue(jTextField1, "example@example.com");
+        this.
+
+                enableDefaultValue(jPasswordField1, "********");
 
         jButton2.setFont(new java.awt.Font("Segoe UI", 0, 14));
         jButton2.setForeground(new java.awt.Color(255, 51, 51));
@@ -178,32 +184,56 @@ public class Login extends javax.swing.JFrame {
                                                                 .
 
                                                         addGroup(LeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false).
+
                                                                 addComponent(jLabel2).
+
                                                                 addComponent(jTextField1).
+
                                                                 addComponent(jLabel3).
+
                                                                 addComponent(jPasswordField1, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE).
+
                                                                 addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)).
+
                                                         addGroup(LeftLayout.createSequentialGroup().
+
                                                                 addComponent(jLabel4).
+
                                                                 addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).
+
                                                                 addComponent(jButton2))))).
+
                                 addContainerGap(27, Short.MAX_VALUE))
         );
         LeftLayout.setVerticalGroup(
                 LeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).
+
                         addGroup(LeftLayout.createSequentialGroup().
+
                                 addGap(51, 51, 51).
+
                                 addComponent(jLabel1).
+
                                 addGap(40, 40, 40).
+
                                 addComponent(jLabel2).
+
                                 addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED).
+
                                 addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE).
+
                                 addGap(18, 18, 18).
+
                                 addComponent(jLabel3).
+
                                 addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED).
+
                                 addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE).
+
                                 addGap(26, 26, 26).
+
                                 addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE).
+
                                 addGap(33, 33, 33).
 
                                 addGroup(LeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -246,16 +276,23 @@ public class Login extends javax.swing.JFrame {
                         addGroup(layout.createSequentialGroup().
 
                                 addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE).
+
                                 addGap(0, 129, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).
+
                         addGroup(layout.createSequentialGroup().
+
                                 addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE).
+
                                 addGap(0, 149, Short.MAX_VALUE))
         );
+
         getAccessibleContext().
+
                 setAccessibleName("LOGIN");
+
         pack();
 
         jButton4 = new javax.swing.JButton();
@@ -365,6 +402,13 @@ public class Login extends javax.swing.JFrame {
 
     public void tornaIndietro() {
         InterfacciaPrima.creazione();
+        this.dispose();
+    }
+
+    public void afterDocenti() throws SQLException {
+        RegistroDocenti app = new RegistroDocenti();
+        app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        app.setVisible(true);
         this.dispose();
     }
 

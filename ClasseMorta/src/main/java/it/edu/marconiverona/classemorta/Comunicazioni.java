@@ -127,5 +127,4 @@ public class Comunicazioni extends JFrame {
             }
         }
     }
-
 }

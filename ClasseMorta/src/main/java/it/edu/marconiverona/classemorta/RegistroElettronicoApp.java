@@ -192,12 +192,18 @@ public class RegistroElettronicoApp extends JFrame {
         centralPanel.add(new JScrollPane(centralList4));
 
         // Pannello inferiore per registrare presenze e voti
-        JButton storico = new JButton("STORICO EVENTI");
-        storico.setBounds(150, 420, 200, 25); // Imposta la posizione e la dimensione del pulsante
-        storico.setEnabled(true); // Rende il pulsante cliccabile
-        storico.setForeground(Color.WHITE); // Imposta il colore del testo del pulsante
-        storico.setBackground(Color.decode("#d15c5c")); // Imposta il colore di sfondo del pulsante
-        add(storico);
+        JButton voti = new JButton("VOTI");
+        voti.setBounds(150, 420, 200, 25); // Imposta la posizione e la dimensione del pulsante
+        voti.setEnabled(true); // Rende il pulsante cliccabile
+        voti.setForeground(Color.WHITE); // Imposta il colore del testo del pulsante
+        voti.setBackground(Color.decode("#d15c5c")); // Imposta il colore di sfondo del pulsante
+        add(voti);
+
+        voti.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                aprimenuvoti();
+            }
+        });
 
 
         // BOX cose da giustificare
@@ -367,6 +373,19 @@ public class RegistroElettronicoApp extends JFrame {
 
     public void apriComunicazioni() throws SQLException {
         new Comunicazioni();
+        this.dispose();
+    }
+
+    public void aprimenuvoti(){
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    new MenuVotiStudente().setVisible(true);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
         this.dispose();
     }
 
