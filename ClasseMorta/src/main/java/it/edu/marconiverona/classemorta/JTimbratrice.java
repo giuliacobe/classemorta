@@ -66,7 +66,7 @@ public class JTimbratrice extends JFrame implements ActionListener {
         buttonUscita.setBounds(350, 350, 100, 40);
         buttonUscita.addActionListener(this);
 
-        enableDefaultValue(fieldTesto, "Matricola");
+        enableDefaultValue(fieldTesto, "Cognome Nome");
 
         contenutoLista = new DefaultListModel<>();
         lista = new JList<>(contenutoLista);

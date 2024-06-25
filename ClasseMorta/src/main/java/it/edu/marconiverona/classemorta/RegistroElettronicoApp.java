@@ -208,7 +208,7 @@ public class RegistroElettronicoApp extends JFrame {
 
         // BOX cose da giustificare
         studentComboBox = new JComboBox<>();
-        studentComboBox.setBounds(150, 450, 200, 25); // Imposta la posizione e la dimensione del JComboBox
+        studentComboBox.setBounds(450, 450, 200, 25); // Imposta la posizione e la dimensione del JComboBox
         add(studentComboBox);
 
         String query10 = "SELECT assenzeDG, usciteDG, ritardiDG FROM DatiLogin WHERE fullName = ?";
@@ -254,7 +254,7 @@ public class RegistroElettronicoApp extends JFrame {
         add(jButton4);
         jButton4.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                jButton4.setForeground(new java.awt.Color(255, 255, 255));
+                jButton4.setForeground(new java.awt.Color(0, 0, 0));
             }
 
             public void mouseExited(java.awt.event.MouseEvent evt) {
@@ -311,7 +311,7 @@ public class RegistroElettronicoApp extends JFrame {
         });
 
         comunicazioni = new JButton("COMUNICAZIONI");
-        comunicazioni.setBounds(450, 450, 200, 25); // Imposta la posizione e la dimensione del pulsante
+        comunicazioni.setBounds(150, 450, 200, 25); // Imposta la posizione e la dimensione del pulsante
         comunicazioni.setForeground(Color.WHITE); // Imposta il colore del testo del pulsante
         comunicazioni.setBackground(Color.decode("#d15c5c")); // Imposta il colore di sfondo del pulsante
         add(comunicazioni);

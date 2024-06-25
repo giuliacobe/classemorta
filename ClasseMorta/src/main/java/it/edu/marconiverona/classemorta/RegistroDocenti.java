@@ -114,7 +114,7 @@ public class RegistroDocenti extends JFrame {
         add(jButton4);
         jButton4.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                jButton4.setForeground(new java.awt.Color(255, 255, 255));
+                jButton4.setForeground(new java.awt.Color(0, 0, 0));
             }
 
             public void mouseExited(java.awt.event.MouseEvent evt) {

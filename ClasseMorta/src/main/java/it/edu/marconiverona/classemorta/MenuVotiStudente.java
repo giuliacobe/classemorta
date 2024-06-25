@@ -117,11 +117,32 @@ public class MenuVotiStudente extends JFrame {
         }
 
         StringBuilder message = new StringBuilder("Voti per la materia " + materia + ":\n");
+
         for (Map.Entry<String, List<String>> entry : grades.entrySet()) {
-            message.append(entry.getKey()).append(": ");
-            message.append(String.join(" || ", entry.getValue()));
+            String student = entry.getKey();
+            List<String> studentGrades = entry.getValue();
+            message.append(student).append(": ");
+            double somma = 0;
+            int count = 0;
+            for (String grade : studentGrades) {
+                if (grade.contains("1/2")) {
+                    double votoMezzo = Double.parseDouble(String.valueOf(grade.charAt(0)));
+                    votoMezzo += Double.parseDouble("0.5");
+                    somma += votoMezzo;
+                    count++;
+                } else {
+                    int voto = Integer.parseInt(grade);
+                    somma += voto;
+                    count++;
+                }
+            }
+            double media = somma / count;
+            message.append(String.join("  -  ", studentGrades));
+            message.append("\n");
+            message.append("Media: ").append(String.format("%.2f", media));
             message.append("\n");
         }
+
         gradesDisplay.setText(message.toString());
     }
 
