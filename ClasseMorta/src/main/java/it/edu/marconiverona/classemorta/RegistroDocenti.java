@@ -24,6 +24,7 @@ public class RegistroDocenti extends JFrame {
     private JButton conferma;
     private Map<String, Map<String, List<String>>> studentGrades;
     private static JTextArea gradesDisplay;
+    private JTextField messaggioDOC;
 
     public RegistroDocenti() throws SQLException {
         try {
@@ -80,7 +81,7 @@ public class RegistroDocenti extends JFrame {
         caricavoti();
 
         gradesDisplay.setEditable(false);
-        gradesDisplay.setBounds(125, 200, 600, 100);
+        gradesDisplay.setBounds(125, 325, 600, 75);
         gradesDisplay.setFont(new Font("Segoe UI", Font.PLAIN, 17));
         gradesDisplay.setForeground(Color.white);
         add(gradesDisplay);
@@ -102,8 +103,13 @@ public class RegistroDocenti extends JFrame {
         loadVoti();
         loadStudentNames();
 
+        messaggioDOC = new JTextField();
+        messaggioDOC.setToolTipText("Massimo 500 caratteri");
+        messaggioDOC.setBounds(125, 160, 550, 150);
+        add(messaggioDOC);
+
         conferma = new JButton("CONFERMA");
-        conferma.setBounds(325, 350, 150, 20);
+        conferma.setBounds(325, 400, 150, 20);
         add(conferma);
         conferma.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -278,7 +284,7 @@ public class RegistroDocenti extends JFrame {
         voto.addItem("10");
     }
 
-    public void loadTipoProva(){
+    public void loadTipoProva() {
         tipoProva.addItem("Orale");
         tipoProva.addItem("Scritta");
         tipoProva.addItem("Pratica");
@@ -334,16 +340,20 @@ public class RegistroDocenti extends JFrame {
     }
 
     public void inserisciVoto() throws SQLException {
-        String query17 = "INSERT INTO voti(materia, fullName, voto, tipoProva) VALUES(?, ?, ?, ?)";
+        String query17 = "INSERT INTO voti(materia, fullName, voto, tipoProva, nomeDocente, messaggio) VALUES(?, ?, ?, ?, ?, ?)";
         PreparedStatement stmt = Main.conn.prepareStatement(query17);
         String materia = materiaComboBox.getSelectedItem().toString();
         String fullName = studentComboBox.getSelectedItem().toString();
         String voto2 = voto.getSelectedItem().toString();
         String tipo = tipoProva.getSelectedItem().toString();
+        String nomeDOC = Login.getFullName();
+        String messDOC = messaggioDOC.getText();
         stmt.setString(1, materia);
         stmt.setString(2, fullName);
         stmt.setString(3, voto2);
         stmt.setString(4, tipo);
+        stmt.setString(5, nomeDOC);
+        stmt.setString(6, messDOC);
         stmt.executeUpdate();
         stmt.close();
 

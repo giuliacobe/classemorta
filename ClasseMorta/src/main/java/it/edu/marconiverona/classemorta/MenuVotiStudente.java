@@ -13,11 +13,10 @@ import java.util.List;
 
 public class MenuVotiStudente extends JFrame {
 
-    // Mappa per conservare i voti degli studenti per materia
     private Map<String, Map<String, List<String>>> studentGrades;
     private JTextArea gradeDisplayArea;
-    private JTextArea gradesDisplay; // Text area to display grades
-    private JComboBox<String> subjectComboBox; // Combo box for selecting subject
+    private JTextArea gradesDisplay;
+    private JComboBox<String> subjectComboBox;
     private Image backgroundImage;
 
     public MenuVotiStudente() throws SQLException {
@@ -26,7 +25,7 @@ public class MenuVotiStudente extends JFrame {
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-
+        setResizable(false);
         try {
             backgroundImage = ImageIO.read(Main.class.getClassLoader().getResource("Filgrana_classemorta.png"));
         } catch (IOException e) {
@@ -52,16 +51,34 @@ public class MenuVotiStudente extends JFrame {
         // Area to display grades
         gradeDisplayArea.setEditable(false);
         gradesDisplay.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(gradeDisplayArea);
-        add(gradesDisplay);
-        gradesDisplay.setBounds(100, 100, 600, 350);
-        add(scrollPane, BorderLayout.CENTER);
+
+        JScrollPane gradeDisplayScrollPane = new JScrollPane(gradesDisplay);
+        gradeDisplayScrollPane.setOpaque(false);
+        gradeDisplayScrollPane.getViewport().setOpaque(false);
+        gradeDisplayScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+        // Create a custom panel with background image
+        JPanel backgroundPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+            }
+        };
+        backgroundPanel.setLayout(new BorderLayout());
+        backgroundPanel.add(gradeDisplayScrollPane, BorderLayout.CENTER);
+
+        add(backgroundPanel, BorderLayout.CENTER); // Ensure the custom panel is added to the center
+
+
         addSubjectSelection();
+
         gradeDisplayArea.setFont(new Font("Segoe UI", Font.PLAIN, 17));
-        gradeDisplayArea.setForeground(Color.white);
+        gradeDisplayArea.setForeground(Color.WHITE);
         gradeDisplayArea.setBackground(new Color(0, 0, 0));
         gradesDisplay.setFont(new Font("Segoe UI", Font.PLAIN, 17));
-        gradesDisplay.setForeground(Color.white);
+        gradesDisplay.setForeground(Color.WHITE);
+        gradesDisplay.setBackground(new Color(0, 0, 0)); // Setting the background for better visibility
 
         // Home button
         JButton homeButton = new JButton("Home");
@@ -93,7 +110,7 @@ public class MenuVotiStudente extends JFrame {
     }
 
     private void loadStudentGrades(String materia) throws SQLException {
-        String query = "SELECT fullName, voto, tipoProva FROM voti WHERE fullName = ? AND materia = ?";
+        String query = "SELECT fullName, voto, tipoProva, messaggio, nomeDocente FROM voti WHERE fullName = ? AND materia = ?";
         try (PreparedStatement stmt = Main.conn.prepareStatement(query)) {
             stmt.setString(1, Login.getFullName());
             stmt.setString(2, materia);
@@ -103,13 +120,15 @@ public class MenuVotiStudente extends JFrame {
                     String fullName = rs.getString("fullName");
                     String voto = rs.getString("voto");
                     String tipoProva = rs.getString("tipoProva");  // Fetch the test type
-                    grades.computeIfAbsent(fullName, k -> new ArrayList<>()).add(voto + " (" + tipoProva + ")");  // Include the test type
+                    String messaggio = rs.getString("messaggio"); // Fetch the teacher's message
+                    String nomeDOC = rs.getString("nomeDocente");
+                    grades.computeIfAbsent(fullName, k -> new ArrayList<>()).add(voto + " (" + tipoProva + ")" + "\n" + "Messaggio: " + messaggio + "\n" + "Docente: " + nomeDOC + "\n"
+                            + "-----------------------------------------------------------------------------------------------------------------------");  // Include the test type and teacher's message
                 }
                 studentGrades.put(materia, grades);
             }
         }
     }
-
 
     private void displayStudentGrades(String materia) {
         Map<String, List<String>> grades = studentGrades.get(materia);
@@ -121,15 +140,14 @@ public class MenuVotiStudente extends JFrame {
         StringBuilder message = new StringBuilder("Voti per la materia " + materia + ":\n");
 
         for (Map.Entry<String, List<String>> entry : grades.entrySet()) {
-            String student = entry.getKey();
             List<String> studentGrades = entry.getValue();
-            message.append(student).append(": " + "\n");
+            message.append("\n");
             double somma = 0;
             int count = 0;
-            for (String gradeWithTipo : studentGrades) {
-                String[] parts = gradeWithTipo.split(" \\(");
+            for (String gradeWithTipoAndMessaggio : studentGrades) {
+                String[] parts = gradeWithTipoAndMessaggio.split(" \\(");
                 String grade = parts[0];
-                String tipoProva = parts[1].replace(")", "");
+                String tipoProvaAndMessaggio = parts[1].replace(")", "");
 
                 if (grade.contains("1/2")) {
                     double votoMezzo = Double.parseDouble(String.valueOf(grade.charAt(0)));
@@ -143,7 +161,9 @@ public class MenuVotiStudente extends JFrame {
                 }
             }
             double media = somma / count;
+            message.append("\n");
             message.append(String.join("\n", studentGrades));
+            message.append("\n");
             message.append("\n");
             message.append("Media: ").append(String.format("%.2f", media));
             message.append("\n");
@@ -151,7 +171,6 @@ public class MenuVotiStudente extends JFrame {
 
         gradesDisplay.setText(message.toString());
     }
-
 
     public void tornaIndietro() throws SQLException {
         RegistroElettronicoApp app = new RegistroElettronicoApp();
