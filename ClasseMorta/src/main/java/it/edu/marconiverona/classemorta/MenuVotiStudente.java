@@ -2,6 +2,7 @@ package it.edu.marconiverona.classemorta;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
@@ -14,10 +15,10 @@ import java.util.List;
 public class MenuVotiStudente extends JFrame {
 
     private Map<String, Map<String, List<String>>> studentGrades;
-    private JTextArea gradeDisplayArea;
-    private JTextArea gradesDisplay;
+    private JPanel gradesDisplayPanel;
     private JComboBox<String> subjectComboBox;
     private Image backgroundImage;
+    private static JLabel averageLabel = new JLabel("Media: ");
 
     public MenuVotiStudente() throws SQLException {
         // Configura il frame
@@ -32,27 +33,22 @@ public class MenuVotiStudente extends JFrame {
             e.printStackTrace();
         }
 
-        gradeDisplayArea = new JTextArea() {
+        gradesDisplayPanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
             }
         };
+        gradesDisplayPanel.setOpaque(false);
 
-        gradesDisplay = new JTextArea();
-        gradeDisplayArea.setOpaque(false);
-        gradesDisplay.setOpaque(false);
+        // Set the layout to GridLayout with 4 rows and 1 column initially (will adjust later)
+        gradesDisplayPanel.setLayout(new GridLayout(0, 4, 10, 10)); // 4 columns, dynamic rows, 10px gaps
 
         // Inizializza i voti degli studenti
         studentGrades = new HashMap<>();
-        caricavoti();
 
-        // Area to display grades
-        gradeDisplayArea.setEditable(false);
-        gradesDisplay.setEditable(false);
-
-        JScrollPane gradeDisplayScrollPane = new JScrollPane(gradesDisplay);
+        JScrollPane gradeDisplayScrollPane = new JScrollPane(gradesDisplayPanel);
         gradeDisplayScrollPane.setOpaque(false);
         gradeDisplayScrollPane.getViewport().setOpaque(false);
         gradeDisplayScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -69,16 +65,17 @@ public class MenuVotiStudente extends JFrame {
         backgroundPanel.add(gradeDisplayScrollPane, BorderLayout.CENTER);
 
         add(backgroundPanel, BorderLayout.CENTER); // Ensure the custom panel is added to the center
-
-
+        caricavoti();
         addSubjectSelection();
 
-        gradeDisplayArea.setFont(new Font("Segoe UI", Font.PLAIN, 17));
-        gradeDisplayArea.setForeground(Color.WHITE);
-        gradeDisplayArea.setBackground(new Color(0, 0, 0));
-        gradesDisplay.setFont(new Font("Segoe UI", Font.PLAIN, 17));
-        gradesDisplay.setForeground(Color.WHITE);
-        gradesDisplay.setBackground(new Color(0, 0, 0)); // Setting the background for better visibility
+        // Panel for average grade
+        JPanel averagePanel = new JPanel();
+        averagePanel.setBackground(new Color(0, 0, 0, 150)); // Semi-transparent background
+        averagePanel.setPreferredSize(new Dimension(200, 200));
+        averageLabel.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        averageLabel.setForeground(Color.WHITE);
+        averagePanel.add(averageLabel);
+        backgroundPanel.add(averagePanel, BorderLayout.WEST);
 
         // Home button
         JButton homeButton = new JButton("Home");
@@ -131,45 +128,81 @@ public class MenuVotiStudente extends JFrame {
     }
 
     private void displayStudentGrades(String materia) {
+        gradesDisplayPanel.removeAll();
         Map<String, List<String>> grades = studentGrades.get(materia);
         if (grades == null || grades.isEmpty()) {
-            gradesDisplay.setText("Nessun voto trovato per la materia " + materia);
+            gradesDisplayPanel.add(new JLabel("Nessun voto trovato per la materia " + materia));
+            gradesDisplayPanel.revalidate();
+            gradesDisplayPanel.repaint();
             return;
         }
 
         StringBuilder message = new StringBuilder("Voti per la materia " + materia + ":\n");
 
+        double somma = 0;
+        int count = 0;
+
         for (Map.Entry<String, List<String>> entry : grades.entrySet()) {
             List<String> studentGrades = entry.getValue();
-            message.append("\n");
-            double somma = 0;
-            int count = 0;
             for (String gradeWithTipoAndMessaggio : studentGrades) {
                 String[] parts = gradeWithTipoAndMessaggio.split(" \\(");
-                String grade = parts[0];
+                String grade = parts[0].trim();
                 String tipoProvaAndMessaggio = parts[1].replace(")", "");
 
+                double voto = 0.0;
                 if (grade.contains("1/2")) {
-                    double votoMezzo = Double.parseDouble(String.valueOf(grade.charAt(0)));
-                    votoMezzo += Double.parseDouble("0.5");
-                    somma += votoMezzo;
-                    count++;
+                    String[] gradeParts = grade.split(" 1/2");
+                    voto = Double.parseDouble(gradeParts[0]) + 0.5;
                 } else {
-                    int voto = Integer.parseInt(grade);
-                    somma += voto;
-                    count++;
+                    voto = Double.parseDouble(grade);
                 }
+
+                somma += voto;
+                count++;
+
+                JLabel gradeLabel = new JLabel(grade);
+                gradeLabel.setForeground(Color.WHITE);
+                gradeLabel.setFont(new Font("Segoe UI", Font.PLAIN, 25));
+                gradeLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+                if (voto <= 4.5) {
+                    gradeLabel.setBackground(new Color(255, 0, 0)); // Red for low grades
+                } else if (voto > 4.5 && voto < 6) {
+                    gradeLabel.setBackground(new Color(255, 165, 0)); // Yellow for medium grades
+                } else if (voto >= 6) {
+                    gradeLabel.setBackground(new Color(0, 128, 0)); // Green for high grades
+                }
+
+                gradeLabel.setOpaque(true);
+                gradeLabel.setPreferredSize(new Dimension(80, 80)); // Imposta dimensioni quadrate
+                gradeLabel.setHorizontalAlignment(SwingConstants.CENTER); // Centro il testo
+
+                gradeLabel.setBorder(new LineBorder(Color.WHITE));
+
+                String finalGradeWithTipoAndMessaggio = gradeWithTipoAndMessaggio;
+                gradeLabel.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        showGradeDetailsDialog(finalGradeWithTipoAndMessaggio);
+                    }
+                });
+
+                gradesDisplayPanel.add(gradeLabel);
             }
-            double media = somma / count;
             message.append("\n");
             message.append(String.join("\n", studentGrades));
             message.append("\n");
             message.append("\n");
-            message.append("Media: ").append(String.format("%.2f", media));
-            message.append("\n");
         }
 
-        gradesDisplay.setText(message.toString());
+        double media = somma / count;
+        averageLabel.setText("Media: " + String.format("%.2f", media)); // Update the average label
+        gradesDisplayPanel.revalidate();
+        gradesDisplayPanel.repaint();
+    }
+
+    private void showGradeDetailsDialog(String gradeDetails) {
+        JOptionPane.showMessageDialog(this, gradeDetails, "Dettagli del Voto", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void tornaIndietro() throws SQLException {
