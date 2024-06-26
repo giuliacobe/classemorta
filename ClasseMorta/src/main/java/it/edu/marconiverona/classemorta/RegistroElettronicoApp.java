@@ -334,7 +334,11 @@ public class RegistroElettronicoApp extends JFrame {
         note.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                try {
+                    apriNote();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
     }
@@ -385,6 +389,10 @@ public class RegistroElettronicoApp extends JFrame {
 
     public void apriComunicazioni() throws SQLException {
         new Comunicazioni();
+        this.dispose();
+    }
+    public void apriNote() throws SQLException {
+        new Note();
         this.dispose();
     }
 
