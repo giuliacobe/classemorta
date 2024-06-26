@@ -24,17 +24,16 @@ public class Note extends JFrame {
         id = 1;
         str = null;
 
-        // Imposta il titolo della finestra
+        // Set the title of the window
         setTitle("Note");
         setResizable(false);
-        // Imposta la dimensione della finestra
+        // Set the size of the window
         setSize(800, 600);
 
-        // Imposta l'operazione di chiusura
+        // Set the default close operation
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Crea un pannello per contenere il messaggio
-
+        // Create a panel to contain the message
         try {
             backgroundImage = ImageIO.read(Main.class.getClassLoader().getResource("Filgrana_classemorta.png"));
         } catch (IOException e) {
@@ -48,21 +47,24 @@ public class Note extends JFrame {
                 g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
             }
         };
-        // Configura la JTextArea
-        label.setFont(new Font("Arial", Font.PLAIN, 20)); // Imposta il font e la dimensione del testo
-        label.setEditable(false); // Rendi il JTextArea non editabile
-        label.setLineWrap(true); // Abilita il ritorno a capo automatico
-        label.setWrapStyleWord(true); // Rendi il ritorno a capo a livello di parola
-        JScrollPane scrollPane = new JScrollPane(label); // Aggiungi uno scroll pane
-        scrollPane.setPreferredSize(new Dimension(600, 400)); // Imposta la dimensione preferita dello scroll pane
+
+        // Configure the JTextArea
+        label.setFont(new Font("Arial", Font.PLAIN, 20)); // Set the font and text size
+        label.setEditable(false); // Make the JTextArea non-editable
+        label.setLineWrap(true); // Enable line wrap
+        label.setWrapStyleWord(true); // Wrap lines at word boundaries
+        JScrollPane scrollPane = new JScrollPane(label); // Add a scroll pane
+        scrollPane.setPreferredSize(new Dimension(600, 400)); // Set the preferred size of the scroll pane
+
         JLabel logo = new JLabel(new ImageIcon(Main.class.getClassLoader().getResource("logo2_no_bg.png")));
         add(logo);
         logo.setBounds(85, 300, 600, 300);
-        // Aggiungi lo scroll pane al pannello
+
+        // Add the scroll pane to the panel
         panel.add(scrollPane);
         crea();
 
-        // Aggiungi il pannello al frame
+        // Add the panel to the frame
         add(panel, BorderLayout.CENTER);
 
         JButton jButton4 = new JButton("Home");
@@ -82,7 +84,7 @@ public class Note extends JFrame {
         });
         add(jButton4, BorderLayout.SOUTH);
 
-        // Rendi la finestra visibile
+        // Make the window visible
         setVisible(true);
     }
 
@@ -94,29 +96,36 @@ public class Note extends JFrame {
     }
 
     public static String addText() throws SQLException {
-        String comun = "";
-        String query10 = "SELECT comunicazione FROM ( SELECT comunicazione, ROW_NUMBER() OVER (ORDER BY comunicazione) AS rn FROM Comun ) WHERE rn = ?";
-        try (PreparedStatement stmt = Main.conn.prepareStatement(query10)) {
-            stmt.setInt(1, id);
+        String noteDetails = "";
+        String query = "SELECT tipoNota, nomeDocente, messaggio FROM ( " +
+                "SELECT tipoNota, nomeDocente, messaggio, ROW_NUMBER() OVER (ORDER BY tipoNota) AS rn " +
+                "FROM note WHERE fullName = ? ) WHERE rn = ?";
+        try (PreparedStatement stmt = Main.conn.prepareStatement(query)) {
+            stmt.setString(1, Login.getFullName());
+            stmt.setInt(2, id);
             id += 1;
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    comun = rs.getString("Note");
+                    String tipoNota = rs.getString("tipoNota");
+                    String docente = rs.getString("nomeDocente");
+                    String messaggio = rs.getString("messaggio");
+                    noteDetails = "Tipo di Nota: " + tipoNota + "\nDocente: " + docente + "\nMessaggio: " + messaggio + "\n";
                 }
             }
         }
-        return comun;
+        return noteDetails;
     }
 
     public static void createString() throws SQLException {
-        str = "Note: " + addText() + "\n";
-        tot = "\n" + tot + str + "\n";
+        str = addText();
+        tot = "\n" + tot + "---------------------------------------\n" + str + "\n";
         label.setText(tot);
     }
 
     public void crea() throws SQLException {
-        String linee2 = "SELECT COUNT(comunicazione) AS numero_di_righe FROM Comun";
+        String linee2 = "SELECT COUNT(*) AS numero_di_righe FROM note WHERE fullName = ?";
         try (PreparedStatement stmt = Main.conn.prepareStatement(linee2)) {
+            stmt.setString(1, Login.getFullName());
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     nRow2 = rs.getInt("numero_di_righe");
@@ -128,4 +137,3 @@ public class Note extends JFrame {
         }
     }
 }
-
