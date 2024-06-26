@@ -27,6 +27,7 @@ public class RegistroElettronicoApp extends JFrame {
     private JComboBox<String> studentComboBox;
     private JButton markPresenceButton;
     private JButton comunicazioni;
+    private JButton note;
     private List<Student> students;
     private Image backgroundImage;
 
@@ -185,7 +186,6 @@ public class RegistroElettronicoApp extends JFrame {
         centralList4.add(uscite);
 
 
-
         centralPanel.add(new JScrollPane(centralList1));
         centralPanel.add(new JScrollPane(centralList2));
         centralPanel.add(new JScrollPane(centralList3));
@@ -325,6 +325,18 @@ public class RegistroElettronicoApp extends JFrame {
                 }
             }
         });
+
+        note = new JButton("NOTE");
+        note.setBounds(150, 480, 200, 25); // Imposta la posizione e la dimensione del pulsante
+        note.setForeground(Color.WHITE); // Imposta il colore del testo del pulsante
+        note.setBackground(Color.decode("#d15c5c")); // Imposta il colore di sfondo del pulsante
+        add(note);
+        note.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
     }
 
     private JList<String> createCentralList() {
@@ -376,7 +388,7 @@ public class RegistroElettronicoApp extends JFrame {
         this.dispose();
     }
 
-    public void aprimenuvoti(){
+    public void aprimenuvoti() {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 try {

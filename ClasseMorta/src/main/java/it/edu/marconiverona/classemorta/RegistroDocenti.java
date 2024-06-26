@@ -21,6 +21,8 @@ public class RegistroDocenti extends JFrame {
     private JComboBox<String> voto;
     private JComboBox<String> tipoProva;
     private JComboBox<String> materiaComboBox;
+    private JComboBox<String> gradeOrNoteComboBox;
+    private JComboBox<String> noteTypeComboBox;
     private JButton conferma;
     private Map<String, Map<String, List<String>>> studentGrades;
     private static JTextArea gradesDisplay;
@@ -65,12 +67,12 @@ public class RegistroDocenti extends JFrame {
         centralPanel.setBorder(new EmptyBorder(0, 0, 0, 0));
 
         studentComboBox = new JComboBox<>();
-        studentComboBox.setBounds(125, 50, 450, 50); // Set position and size of the JComboBox
+        studentComboBox.setBounds(125, 50, 400, 50); // Set position and size of the JComboBox
         studentComboBox.setFont(new Font("Arial", Font.BOLD, 20));
         add(studentComboBox);
 
         materiaComboBox = new JComboBox<>();
-        materiaComboBox.setBounds(125, 110, 450, 50); // Set position and size of the JComboBox for materie
+        materiaComboBox.setBounds(125, 110, 400, 50); // Set position and size of the JComboBox for materie
         materiaComboBox.setFont(new Font("Arial", Font.BOLD, 20));
         add(materiaComboBox);
         loadMaterie();
@@ -91,37 +93,51 @@ public class RegistroDocenti extends JFrame {
         logo.setBounds(100, 325, 600, 300);
 
         voto = new JComboBox<>();
-        voto.setBounds(600, 50, 75, 50); // Set position and size of the JComboBox
+        voto.setBounds(550, 50, 125, 50); // Set position and size of the JComboBox
         voto.setFont(new Font("Arial", Font.BOLD, 20));
         add(voto);
 
         tipoProva = new JComboBox<>();
-        tipoProva.setBounds(600, 110, 75, 50); // Set position and size of the JComboBox
+        tipoProva.setBounds(550, 110, 125, 50); // Set position and size of the JComboBox
         tipoProva.setFont(new Font("Arial", Font.BOLD, 20));
         add(tipoProva);
-        loadTipoProva();
-        loadVoti();
-        loadStudentNames();
 
         messaggioDOC = new JTextField();
         messaggioDOC.setToolTipText("Massimo 500 caratteri");
-        messaggioDOC.setBounds(125, 160, 550, 150);
+        messaggioDOC.setBounds(125, 175, 550, 150);
         add(messaggioDOC);
+
+        gradeOrNoteComboBox = new JComboBox<>();
+        gradeOrNoteComboBox.setBounds(125, 10, 150, 30);
+        gradeOrNoteComboBox.addItem("Voto");
+        gradeOrNoteComboBox.addItem("Nota");
+        gradeOrNoteComboBox.setFont(new Font("Arial", Font.BOLD, 14));
+        add(gradeOrNoteComboBox);
+
+        noteTypeComboBox = new JComboBox<>();
+        noteTypeComboBox.setBounds(125, 110, 400, 50);
+        noteTypeComboBox.addItem("Nota Disciplinare");
+        noteTypeComboBox.addItem("Annotazione");
+        noteTypeComboBox.setFont(new Font("Arial", Font.BOLD, 20));
+        add(noteTypeComboBox);
 
         conferma = new JButton("CONFERMA");
         conferma.setBounds(325, 400, 150, 20);
         add(conferma);
-        conferma.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                try {
+
+        gradeOrNoteComboBox.addActionListener(e -> toggleGradeOrNote());
+
+        conferma.addActionListener(e -> {
+            try {
+                if (gradeOrNoteComboBox.getSelectedItem().equals("Voto")) {
                     inserisciVoto();
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
+                } else {
+                    inserisciNotaAnnotazione();
                 }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
             }
         });
-
-        add(centralPanel);
 
         JButton jButton4 = new JButton();
         jButton4.setFont(new java.awt.Font("Segoe UI", 0, 20));
@@ -131,11 +147,7 @@ public class RegistroDocenti extends JFrame {
         jButton4.setContentAreaFilled(false);
         jButton4.setBorderPainted(false);
         jButton4.setDefaultCapable(false);
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tornaIndietro();
-            }
-        });
+        jButton4.addActionListener(evt -> tornaIndietro());
         jButton4.setBackground(null);
         jButton4.setFont(new java.awt.Font("Segoe UI", 0, 14));
         jButton4.setBounds(-20, -5, 93, 36);
@@ -167,6 +179,27 @@ public class RegistroDocenti extends JFrame {
                 ex.printStackTrace();
             }
         });
+
+        loadTipoProva();
+        loadVoti();
+        loadStudentNames();
+        toggleGradeOrNote(); // Initialize the form with the correct fields displayed
+    }
+
+    private void toggleGradeOrNote() {
+        if (gradeOrNoteComboBox.getSelectedItem().equals("Voto")) {
+            materiaComboBox.setVisible(true);
+            voto.setVisible(true);
+            tipoProva.setVisible(true);
+            noteTypeComboBox.setVisible(false);
+            gradesDisplay.setVisible(true);
+        } else {
+            materiaComboBox.setVisible(false);
+            voto.setVisible(false);
+            tipoProva.setVisible(false);
+            noteTypeComboBox.setVisible(true);
+            gradesDisplay.setVisible(false);
+        }
     }
 
     private void loadStudentNames() throws SQLException {
@@ -288,7 +321,6 @@ public class RegistroDocenti extends JFrame {
         tipoProva.addItem("Orale");
         tipoProva.addItem("Scritta");
         tipoProva.addItem("Pratica");
-
     }
 
     public void loadMaterie() {
@@ -360,5 +392,20 @@ public class RegistroDocenti extends JFrame {
         // Refresh grades display after inserting a new grade
         loadStudentGrades();
         displayStudentGrades();
+    }
+
+    public void inserisciNotaAnnotazione() throws SQLException {
+        String query = "INSERT INTO note (fullName, tipoNota, messaggio, nomeDocente) VALUES (?, ?, ?, ?)";
+        PreparedStatement stmt = Main.conn.prepareStatement(query);
+        String fullName = studentComboBox.getSelectedItem().toString();
+        String tipoNota = noteTypeComboBox.getSelectedItem().toString();
+        String messaggio = messaggioDOC.getText();
+        String nomeDocente = Login.getFullName();
+        stmt.setString(1, fullName);
+        stmt.setString(2, tipoNota);
+        stmt.setString(3, messaggio);
+        stmt.setString(4, nomeDocente);
+        stmt.executeUpdate();
+        stmt.close();
     }
 }
