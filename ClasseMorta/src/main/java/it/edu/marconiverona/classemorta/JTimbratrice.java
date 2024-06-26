@@ -191,6 +191,7 @@ public class JTimbratrice extends JFrame implements ActionListener {
             stmt.executeQuery();
         }
 
+
         String elemento = azione + ": " + testo;
         contenutoLista.addElement(elemento);
         timb.timbra(testo, azione);
@@ -212,7 +213,7 @@ public class JTimbratrice extends JFrame implements ActionListener {
         stmt.executeQuery();
 
         DataOra oraCorrente = new DataOra();
-        String elemento = "Uscita: " + testo + " è l'inserimento";
+        String elemento = "Uscita: " + testo + " è uscito alle ore: " + oraCorrente;
 
         contenutoLista.addElement(elemento);
         timb.timbra(testo, "Uscita");
