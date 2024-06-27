@@ -68,9 +68,9 @@ public class MenuVotiStudente extends JFrame {
         caricavoti();
         addSubjectSelection();
 
-        // Panel for average grade
+
         JPanel averagePanel = new JPanel();
-        averagePanel.setBackground(new Color(0, 0, 0, 150)); // Semi-transparent background
+        averagePanel.setBackground(new Color(0, 0, 0, 150));
         averagePanel.setPreferredSize(new Dimension(200, 200));
         averageLabel.setFont(new Font("Segoe UI", Font.BOLD, 20));
         averageLabel.setForeground(Color.WHITE);

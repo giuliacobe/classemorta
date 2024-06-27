@@ -20,10 +20,9 @@ public class Comunicazioni extends JFrame {
         // Reset static variables to prevent duplication
         id = 1;
 
-        // Set the title of the window
+
         setTitle("Comunicazioni");
         setResizable(false);
-        // Set the size of the window
         setSize(800, 600);
 
         // Set the default close operation
